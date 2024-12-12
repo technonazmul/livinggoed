@@ -143,11 +143,11 @@ if ( ! class_exists( 'Houzez_Activities' ) ) {
 		    $page = isset($_GET['cpage']) ? abs(intval($_GET['cpage'])) : 1;
 		    $offset = ($page * $items_per_page) - $items_per_page;
 
-		    $current_user_id = get_current_user_id();
+		    
 
 		    // Secure the SQL query using prepare()
-		    $query = $wpdb->prepare("SELECT * FROM {$table_name} WHERE user_id = %d ORDER BY activity_id DESC LIMIT %d, %d", $current_user_id, $offset, $items_per_page);
-		    $total_query = $wpdb->prepare("SELECT COUNT(1) FROM {$table_name} WHERE user_id = %d", $current_user_id);
+		    $query = $wpdb->prepare("SELECT * FROM {$table_name} ORDER BY activity_id DESC LIMIT %d, %d", $offset, $items_per_page);
+		    $total_query = $wpdb->prepare("SELECT COUNT(1) FROM {$table_name}");
 
 		    $total = $wpdb->get_var($total_query);
 		    $results = $wpdb->get_results($query, OBJECT);
