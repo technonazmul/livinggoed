@@ -1895,11 +1895,34 @@ if( ! function_exists('houzez_get_property_authors_list') ) {
     }
 }
 
+
 if( ! function_exists('houzez_property_authors_list') ) {
     function houzez_property_authors_list() {
         echo houzez_get_property_authors_list();
     }
 }
+
+if( ! function_exists('get_all_leads_template') ) {
+    function get_all_leads_template() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'houzez_crm_leads';
+        
+        // Fetch results
+        $sql = "SELECT * FROM $table_name";
+        $results = $wpdb->get_results($sql, OBJECT);
+        // Build options
+        $output = '';
+        foreach ($results as $user) {
+            // Replace ID and display_name with actual column names if needed
+            $output .= '<option value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
+        }
+
+        echo $output;
+    }
+}
+
+
+
 
 if( ! function_exists('houzez_get_agent_agency_id') ) {
     function houzez_get_agent_agency_id($agent_userId) {

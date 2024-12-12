@@ -215,6 +215,9 @@ if( !function_exists('houzez_submit_listing') ) {
         }
 
         $new_property['post_author'] = $post_author;
+        if( isset( $_POST['lead_id'] )) {
+            $new_property['lead_id'] = $_POST['lead_id'];
+        }
 
         $submission_action = $_POST['action'];
         $prop_id = 0;
@@ -262,7 +265,7 @@ if( !function_exists('houzez_submit_listing') ) {
         } else if( $submission_action == 'update_property' ) {
 
             $new_property['ID'] = intval( $_POST['prop_id'] );
-
+            
             if( get_post_status( intval( $_POST['prop_id'] ) ) == 'draft' ) {
                 if( $enable_paid_submission == 'membership') {
                     houzez_update_package_listings($userIdPackage);

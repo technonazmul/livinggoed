@@ -970,8 +970,8 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 		public static function get_all_leads() {
 		    global $wpdb;
 		    $table_name = $wpdb->prefix . 'houzez_crm_leads';
-		    $current_user_id = get_current_user_id();
-		    $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE user_id= %d", $current_user_id);
+		    
+		    $sql = $wpdb->prepare("SELECT * FROM $table_name");
 		    $results = $wpdb->get_results($sql, OBJECT);
 		    return $results;
 		}
