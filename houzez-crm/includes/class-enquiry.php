@@ -361,42 +361,46 @@ if ( ! class_exists( 'Houzez_Enquiry' ) ) {
 		}
 
 		public static function get_enquires() {
-		    global $wpdb;
-		    $table_name = $wpdb->prefix . 'houzez_crm_enquiries';
-
-		    $andwhere = '';
-		    if(isset($_GET['lead-id']) && !empty($_GET['lead-id'])) {
-		        $lead_id = intval($_GET['lead-id']);
-		        $andwhere .= $wpdb->prepare(' AND lead_id = %d ', $lead_id);
-		    }
-
-		    if(isset($_GET['keyword']) && !empty($_GET['keyword'])) {
-		        $keyword = sanitize_text_field($_GET['keyword']);
-		        $andwhere .= $wpdb->prepare(' AND (enquiry_type LIKE %s)', "%$keyword%");
-		    }
-
-		    $items_per_page = isset($_GET['records']) ? intval($_GET['records']) : 10;
-		    $page = isset($_GET['cpage']) ? abs((int) $_GET['cpage']) : 1;
-		    $offset = ($page * $items_per_page) - $items_per_page;
-		    $user_id = get_current_user_id();
-
-		    $query = $wpdb->prepare('SELECT * FROM '.$table_name.' WHERE user_id = %d '.$andwhere, $user_id);
-		    $total_query = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
-		    $total = $wpdb->get_var($total_query);
-
-		    $results = $wpdb->get_results($wpdb->prepare($query.' ORDER BY enquiry_id DESC LIMIT %d, %d', $offset, $items_per_page), OBJECT);
-
-		    $return_array = array(
-		        'data' => array(
-		            'results' => $results,
-		            'total_records' => $total,
-		            'items_per_page' => $items_per_page,
-		            'page' => $page,
-		        ),
-		    );
-
-		    return $return_array;
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'houzez_crm_enquiries';
+		
+			$andwhere = '';
+			if (isset($_GET['lead-id']) && !empty($_GET['lead-id'])) {
+				$lead_id = intval($_GET['lead-id']);
+				$andwhere .= $wpdb->prepare(' AND lead_id = %d ', $lead_id);
+			}
+		
+			if (isset($_GET['keyword']) && !empty($_GET['keyword'])) {
+				$keyword = sanitize_text_field($_GET['keyword']);
+				$andwhere .= $wpdb->prepare(' AND (enquiry_type LIKE %s)', "%$keyword%");
+			}
+		
+			$items_per_page = isset($_GET['records']) ? intval($_GET['records']) : 10;
+			$page = isset($_GET['cpage']) ? abs((int) $_GET['cpage']) : 1;
+			$offset = ($page * $items_per_page) - $items_per_page;
+		
+			// Base query without filtering by user_id
+			$query = 'SELECT * FROM ' . $table_name . ' WHERE 1=1 ' . $andwhere;
+			$total_query = "SELECT COUNT(1) FROM ({$query}) AS combined_table";
+			$total = $wpdb->get_var($total_query);
+		
+			$results = $wpdb->get_results(
+				$wpdb->prepare($query . ' ORDER BY enquiry_id DESC LIMIT %d, %d', $offset, $items_per_page),
+				OBJECT
+			);
+		
+			$return_array = array(
+				'data' => array(
+					'results' => $results,
+					'total_records' => $total,
+					'items_per_page' => $items_per_page,
+					'page' => $page,
+				),
+			);
+		
+			return $return_array;
 		}
+		
 
 
 
