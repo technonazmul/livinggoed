@@ -11,7 +11,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label><?php esc_html_e('Title*', 'houzez'); ?></label>
-						<select id="prefix" name="prefix" class="selectpicker form-control bs-select-hidden" title="<?php esc_html_e('Select', 'houzez'); ?>">
+						<select id="prefix-test" name="prefix" class="selectpicker form-control bs-select-hidden" title="<?php esc_html_e('Select', 'houzez'); ?>">
 							<option value=""><?php esc_html_e('Select', 'houzez'); ?></option>
 							<?php
 							$prefix = hcrm_get_option('prefix', 'hcrm_lead_settings', esc_html__('Mr, Mrs, Ms, Miss, Dr, Prof, Mr & Mrs', 'houzez'));
@@ -48,7 +48,19 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label><?php esc_html_e('Type', 'houzez'); ?></label>
-						<input class="form-control" id="user_type" name="user_type" placeholder="<?php esc_html_e('Enter user type (buyer, agent etc)', 'houzez'); ?>" type="text">
+						<select id="user_type" name="user_type" class="form-control">
+							<option>Select User Type</option>
+							<option value="Sellers">Sellers</option>
+							<option value="Landlords">Landlords</option>
+							<option value="Buyers">Buyers</option>
+							<option value="Tenants">Tenants</option>
+							<option value="Seekers">Seekers</option>
+							<option value="Viewers">Viewers</option>
+							<option value="Notaries">Notaries</option>
+							<option value="Employees">Employees</option>
+							<option value="Administrators">Administrators</option>
+						</select>
+						
 					</div>
 				</div>
 			</div>
