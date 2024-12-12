@@ -932,41 +932,43 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 		}
 
 		public static function get_leads() {
-		    global $wpdb;
-		    $table_name = $wpdb->prefix . 'houzez_crm_leads';
-
-		    $items_per_page = isset($_GET['records']) ? intval($_GET['records']) : 10;
-		    $page = isset($_GET['cpage']) ? abs((int) $_GET['cpage']) : 1;
-		    $offset = ($page * $items_per_page) - $items_per_page;
-
-		    $current_user_id = get_current_user_id();
-
-		    // Retrieving the search keyword
-		    $keyword = isset($_GET['keyword']) ? sanitize_text_field(trim($_GET['keyword'])) : '';
-
-		    // Basic query
-		    $query = "SELECT * FROM {$table_name} WHERE user_id = %d";
-
-		    // If keyword is present, modify the query to include search condition
-		    if (!empty($keyword)) {
-		        $query .= $wpdb->prepare(" AND (mobile LIKE '%%%s%%' OR email LIKE '%%%s%%' OR first_name LIKE '%%%s%%' OR last_name LIKE '%%%s%%')", $keyword, $keyword, $keyword, $keyword);
-		    }
-
-		    $total_query = "SELECT COUNT(1) FROM ({$query}) AS combined_table"; // no need for prepare here
-		    $total = $wpdb->get_var($wpdb->prepare($total_query, $current_user_id));
-
-		    $results_query = $wpdb->prepare($query . ' ORDER BY lead_id DESC LIMIT %d, %d', $current_user_id, $offset, $items_per_page);
-		    $results = $wpdb->get_results($results_query, OBJECT);
-
-		    $return_array['data'] = array(
-		        'results' => $results,
-		        'total_records' => $total,
-		        'items_per_page' => $items_per_page,
-		        'page' => $page,
-		    );
-
-		    return $return_array;
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'houzez_crm_leads';
+		
+			$items_per_page = isset($_GET['records']) ? intval($_GET['records']) : 10;
+			$page = isset($_GET['cpage']) ? abs((int) $_GET['cpage']) : 1;
+			$offset = ($page * $items_per_page) - $items_per_page;
+		
+			// Retrieving the search keyword
+			$keyword = isset($_GET['keyword']) ? sanitize_text_field(trim($_GET['keyword'])) : '';
+		
+			// Basic query to retrieve all data
+			$query = "SELECT * FROM {$table_name}";
+		
+			// If keyword is present, modify the query to include search condition
+			if (!empty($keyword)) {
+				$query .= $wpdb->prepare(
+					" WHERE (mobile LIKE '%%%s%%' OR email LIKE '%%%s%%' OR first_name LIKE '%%%s%%' OR last_name LIKE '%%%s%%')",
+					$keyword, $keyword, $keyword, $keyword
+				);
+			}
+		
+			$total_query = "SELECT COUNT(1) FROM ({$query}) AS combined_table"; // No need for prepare here
+			$total = $wpdb->get_var($total_query);
+		
+			$results_query = $query . $wpdb->prepare(' ORDER BY lead_id DESC LIMIT %d, %d', $offset, $items_per_page);
+			$results = $wpdb->get_results($results_query, OBJECT);
+		
+			$return_array['data'] = array(
+				'results' => $results,
+				'total_records' => $total,
+				'items_per_page' => $items_per_page,
+				'page' => $page,
+			);
+		
+			return $return_array;
 		}
+		
 		
 		public static function get_all_leads() {
 		    global $wpdb;
