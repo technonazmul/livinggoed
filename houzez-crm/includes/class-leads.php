@@ -418,10 +418,7 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 			$first_name = sanitize_text_field( $_POST['first_name'] );
 			$name = sanitize_text_field( $_POST['name'] );
 
-			if(empty($prefix)) {
-				echo json_encode( array( 'success' => false, 'msg' => esc_html__('Please select title!', 'houzez-crm') ) );
-	            wp_die();
-			}
+			
 
 			if(empty($name)) {
 				echo json_encode( array( 'success' => false, 'msg' => esc_html__('Please enter your full name!', 'houzez-crm') ) );
