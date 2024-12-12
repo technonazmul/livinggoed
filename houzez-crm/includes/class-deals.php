@@ -488,8 +488,8 @@ if ( ! class_exists( 'Houzez_Deals' ) ) {
 		    $offset = ( $page * $items_per_page ) - $items_per_page;
 
 		    $sql = $wpdb->prepare(
-		        "SELECT * FROM {$table_name} WHERE user_id = %d AND deal_group = %s ORDER BY deal_id DESC LIMIT %d, %d", 
-		        get_current_user_id(),
+		        "SELECT * FROM {$table_name} deal_group = %s ORDER BY deal_id DESC LIMIT %d, %d", 
+		        
 		        $deal_group,
 		        $offset,
 		        $items_per_page
@@ -497,8 +497,8 @@ if ( ! class_exists( 'Houzez_Deals' ) ) {
 		    $results = $wpdb->get_results($sql, OBJECT);
 
 		    $count_sql = $wpdb->prepare(
-		        "SELECT COUNT(1) FROM {$table_name} WHERE user_id = %d AND deal_group = %s", 
-		        get_current_user_id(), 
+		        "SELECT COUNT(1) FROM {$table_name} deal_group = %s", 
+		        
 		        $deal_group
 		    );
 		    $total = $wpdb->get_var($count_sql);
