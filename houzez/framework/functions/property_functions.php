@@ -245,6 +245,13 @@ if( !function_exists('houzez_submit_listing') ) {
             $new_property = apply_filters( 'houzez_before_submit_property', $new_property );
             $prop_id = wp_insert_post( $new_property );
 
+            // Send mail after create a property
+            if(function_exists('houzez_crm_get_matched_data')) {
+                do_action('houzez_crm_send_scheduled_emails');
+            } else {
+                error_log('Function houzez_crm_send_scheduled_emails not found.');
+            }
+
             if( $prop_id > 0 ) {
                 $submitted_successfully = true;
                 if( $enable_paid_submission == 'membership'){ // update package status
