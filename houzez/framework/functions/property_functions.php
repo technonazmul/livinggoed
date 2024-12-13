@@ -291,7 +291,9 @@ if( !function_exists('houzez_submit_listing') ) {
             /*
              * Filter submission arguments before update property.
              */
-            $new_property = apply_filters( 'houzez_before_update_property', $new_property );
+            //$new_property = apply_filters( 'houzez_before_update_property', $new_property );
+            print_r($new_property);
+            
             $prop_id = wp_update_post( $new_property );
 
         }
