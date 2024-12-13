@@ -85,6 +85,7 @@ $leads = Houzez_leads::get_leads();
                             <th><?php esc_html_e('Email', 'houzez'); ?></th>
                             <th><?php esc_html_e('Phone', 'houzez'); ?></th>
                             <th><?php esc_html_e('Type', 'houzez'); ?></th>
+                            <th><?php esc_html_e('Properties', 'houzez'); ?></th>
                             <th><?php esc_html_e('Date', 'houzez'); ?></th>
                             <th class="action-col"><?php esc_html_e('Actions', 'houzez'); ?></th>
                         </tr>
@@ -132,6 +133,40 @@ $leads = Houzez_leads::get_leads();
                                         $type = htmlentities($type);
                                         echo esc_attr($type); 
                                     }?>
+                                </td>
+                                <td>
+                                    <?php
+                                    
+                                        global $wpdb;
+                                    
+                                        // Sanitize the lead_id
+                                        $lead_id = sanitize_text_field( $result->lead_id );
+                                    
+                                        // Query to fetch posts where post_type is 'property' and lead_id matches
+                                        $results_property = $wpdb->get_results(
+                                            $wpdb->prepare(
+                                                "
+                                                SELECT * 
+                                                FROM {$wpdb->posts}
+                                                WHERE post_type = %s
+                                                AND lead_id = %s
+                                                AND post_status = 'publish'
+                                                ",
+                                                'property',
+                                                $lead_id
+                                            ),
+                                           
+                                        );
+                                    if(!empty($results_property)) {
+                                        foreach ($results_property as $singleproperty) {
+                                            $post_title = substr( $singleproperty->post_title, 0, 15 ) . '...';
+                                            $post_link = get_permalink( $singleproperty->ID );
+                                            echo '<a target="_blank" href="' . esc_url( $post_link ) . '">' . esc_html( $post_title ) . '</a><br>';
+                                        }
+                                    }
+                                        
+                                     
+                                    ?>
                                 </td>
                                 <td class="table-nowrap" data-label="<?php esc_html_e('Date', 'houzez'); ?>">
                                     <?php echo esc_attr($get_date); ?><br>
