@@ -15,7 +15,28 @@ if( $enable_title_limit == 1 && $property_title_limit != '' ) {
     <label>Select Lead</label>
    
     <select name="lead_id" id="property-author-js" class="selectpicker form-control property-lead-js" data-live-search="true" data-size="5">
-        <?php get_all_leads_template(); ?>
+        <?php
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'houzez_crm_leads';
+        
+        // Fetch results
+        $sql = "SELECT * FROM $table_name";
+        $results = $wpdb->get_results($sql, OBJECT);
+        // Build options
+        $output = '';
+        foreach ($results as $user) {
+            if($property_data->lead_id == $user->lead_id) {
+                $output .= '<option selected value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
+            }else {
+                $output .= '<option value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
+            }
+           
+            
+        }
+
+        echo $output;
+
+        ?>
     </select>
 </div>
 
@@ -25,13 +46,7 @@ if( $enable_title_limit == 1 && $property_title_limit != '' ) {
 	<?php if( $is_limit ) { ?>
 	<div class="title-counter"><span id="rchars">0</span><span> / <?php echo esc_attr($property_title_limit); ?></span></div>
 	<?php } 
-	
-	if (houzez_edit_property()) {
-        global $property_data;
-        
-		print_r($property_data);
-        
-    }
+
 	?>
 	
 
@@ -39,7 +54,7 @@ if( $enable_title_limit == 1 && $property_title_limit != '' ) {
     if (houzez_edit_property()) {
         global $property_data;
         echo esc_attr($property_data->post_title);
-        echo esc_attr($property_data->lead_id);
+       
         
     }
     ?>" placeholder="<?php echo houzez_option('cl_prop_title_plac', 'Enter your property title'); ?>" <?php echo $length; ?> type="text">
