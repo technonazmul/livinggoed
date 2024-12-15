@@ -8,7 +8,9 @@ if( $enable_title_limit == 1 && $property_title_limit != '' ) {
 	$is_limit = true;
 	$length = 'maxlength="'.esc_attr($property_title_limit).'"';
 }
+global $property_data;
 ?>
+
 <div class="menu-edit-property-wrap">
 
     <div class="property-author-wrap">
@@ -26,7 +28,7 @@ if( $enable_title_limit == 1 && $property_title_limit != '' ) {
         $output = '';
         foreach ($results as $user) {
             if($property_data->lead_id == $user->lead_id) {
-                $output .= '<option selected value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
+                $output .= '<option selected value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name) . '</option>';
             }else {
                 $output .= '<option value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
             }
