@@ -111,6 +111,42 @@ if( isset($_GET['tab']) && $_GET['tab'] == 'enquires' ) {
                 <div class="col-md-4 col-sm-12">
                     <div class="dashboard-content-block">
                         <?php get_template_part('template-parts/dashboard/board/leads/lead-info'); ?>
+
+                                    <div class="lead-detail-wrap">
+                                    <h2>Properties</h2>
+                                    </div>
+                                    
+                                    <?php
+                                        global $wpdb;
+                                    
+                                       
+                                    
+                                        // Query to fetch posts where post_type is 'property' and lead_id matches
+                                        $results_property = $wpdb->get_results(
+                                            $wpdb->prepare(
+                                                "
+                                                SELECT * 
+                                                FROM {$wpdb->posts}
+                                                WHERE post_type = %s
+                                                AND lead_id = %s
+                                                AND post_status = 'publish'
+                                                ",
+                                                'property',
+                                                $lead_data->lead_id
+                                            ),
+                                           
+                                        );
+                                       
+                                    if(!empty($results_property)) {
+                                        foreach ($results_property as $singleproperty) {
+                                            $post_title = substr( $singleproperty->post_title, 0, 50 ) . '...';
+                                            $post_link = get_permalink( $singleproperty->ID );
+                                            echo '<a target="_blank" href="' . esc_url( $post_link ) . '">' . esc_html( $post_title ) . '</a><br>';
+                                        }
+                                    }
+                                        
+                                     
+                                    ?>
                     </div><!-- dashboard-content-block -->       
                 </div><!-- col-md-4 col-sm-12 -->
                 <div class="col-md-8 col-sm-12">
@@ -136,6 +172,7 @@ if( isset($_GET['tab']) && $_GET['tab'] == 'enquires' ) {
                                 <?php esc_html_e('Notes', 'houzez'); ?>
                             </a>
                         </li>
+                        
                     </ul>
                     <div class="dashboard-content-block tab-content">
                         <?php 
@@ -156,6 +193,7 @@ if( isset($_GET['tab']) && $_GET['tab'] == 'enquires' ) {
 
                         }
                         ?>
+                        
                     </div><!-- dashboard-content-block -->
                 </div><!-- col-md-8 col-sm-12 -->
             </div>
