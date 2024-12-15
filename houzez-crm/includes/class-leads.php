@@ -521,225 +521,83 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 
 
 		public function save_lead() {
-
 			global $wpdb;
 			$user_id = $message = '';
-
 			$lead_title = '';
-			if ( isset( $_POST['name'] ) ) {
-				$lead_title = sanitize_text_field( $_POST['name'] );
+		
+			// Fetch and sanitize input data
+			if (isset($_POST['name'])) {
+				$lead_title = sanitize_text_field($_POST['name']);
 			}
-
-			$first_name = '';
-			if ( isset( $_POST['first_name'] ) ) {
-				$first_name = sanitize_text_field( $_POST['first_name'] );
-			}
-
-			$prefix = '';
-			if ( isset( $_POST['prefix'] ) ) {
-				$prefix = sanitize_text_field( $_POST['prefix'] );
-			}
-
-			$last_name = '';
-			if ( isset( $_POST['last_name'] ) ) {
-				$last_name = sanitize_text_field( $_POST['last_name'] );
-			}
-
-			if(empty($lead_title)) {
-				$lead_title = $first_name.' '.$last_name;
-			}
-
-			$mobile = '';
-			if ( isset( $_POST['mobile'] ) ) {
-				$mobile = sanitize_text_field( $_POST['mobile'] );
-			}
-
-			if( isset($_POST['is_schedule_form']) && $_POST['is_schedule_form'] == 'yes') {
-				$mobile = sanitize_text_field( $_POST['phone'] );
-			}
-
-			$home_phone = '';
-			if ( isset( $_POST['home_phone'] ) ) {
-				$home_phone = sanitize_text_field( $_POST['home_phone'] );
-			}
-
-
-			$work_phone = '';
-			if ( isset( $_POST['work_phone'] ) ) {
-				$work_phone = sanitize_text_field( $_POST['work_phone'] );
-			}
-
-			$user_type = '';
-			if ( isset( $_POST['user_type'] ) ) {
-				$user_type = sanitize_text_field( $_POST['user_type'] );
-				$user_type = houzez_crm_get_form_user_type($user_type);
-			}
-
-			$email = '';
-			if ( isset( $_POST['email'] ) ) {
-				$email = sanitize_email( $_POST['email'] );
-			}
-
-			$address = '';
-			if ( isset( $_POST['address'] ) ) {
-				$address = sanitize_text_field( $_POST['address'] );
-			}
-
-			$country = '';
-			if ( isset( $_POST['country'] ) ) {
-				$country = sanitize_text_field( $_POST['country'] );
-			}
-
-			$city = '';
-			if ( isset( $_POST['city'] ) ) {
-				$city = sanitize_text_field( $_POST['city'] );
-			}
-
-			$state = '';
-			if ( isset( $_POST['state'] ) ) {
-				$state = sanitize_text_field( $_POST['state'] );
-			}
-
-			$zip = '';
-			if ( isset( $_POST['zip'] ) ) {
-				$zip = sanitize_text_field( $_POST['zip'] );
-			}
-
-			$source = '';
-			if ( isset( $_POST['source'] ) ) {
-				$source = sanitize_text_field( $_POST['source'] );
-			}
-
-			$source_link = '';
-			if ( isset( $_POST['source_link'] ) ) {
-				$source_link = esc_url( $_POST['source_link'] );
-			}
-
-			if( isset($_POST['property_permalink']) ) {
-				$source_link = esc_url($_POST['property_permalink']);
-			}
-
-			$agent_id = '';
-			if ( isset( $_POST['agent_id'] ) ) {
-				$agent_id = sanitize_text_field( $_POST['agent_id'] );
-			}
-
-			$agent_type = '';
-			if ( isset( $_POST['agent_type'] ) ) {
-				$agent_type = sanitize_text_field( $_POST['agent_type'] );
-			}
-
-			$facebook = '';
-			if ( isset( $_POST['facebook'] ) ) {
-				$facebook = sanitize_text_field( $_POST['facebook'] );
-			}
-
-			$twitter = '';
-			if ( isset( $_POST['twitter'] ) ) {
-				$twitter = sanitize_text_field( $_POST['twitter'] );
-			}
-
-			$linkedin = '';
-			if ( isset( $_POST['linkedin'] ) ) {
-				$linkedin = sanitize_text_field( $_POST['linkedin'] );
-			}
-
-			$private_note = '';
-			if ( isset( $_POST['private_note'] ) ) {
-				$private_note = sanitize_textarea_field( $_POST['private_note'] );
-			}
-
-			$listing_id = '';
-			if ( isset( $_POST['listing_id'] ) ) {
-				$listing_id = intval( $_POST['listing_id'] );
-			}
-
-			if(!empty($listing_id)) {
-				$user_id = get_post_field( 'post_author', $listing_id );
-			}
-
-			if(isset($_POST['realtor_page']) && $_POST['realtor_page'] == 'yes') {
-				if($agent_type == 'author_info') {
-					$user_id = $agent_id;
-				} else {
-					$user_id = get_post_meta( $agent_id, 'houzez_user_meta_id', true );
+		
+			$first_name = isset($_POST['first_name']) ? sanitize_text_field($_POST['first_name']) : '';
+			$prefix = isset($_POST['prefix']) ? sanitize_text_field($_POST['prefix']) : '';
+			$last_name = isset($_POST['last_name']) ? sanitize_text_field($_POST['last_name']) : '';
+			$lead_title = empty($lead_title) ? $first_name . ' ' . $last_name : $lead_title;
+			$mobile = isset($_POST['mobile']) ? sanitize_text_field($_POST['mobile']) : '';
+			$email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+		
+			$data = array(
+				'user_id'       => $user_id,
+				'prefix'        => $prefix,
+				'display_name'  => $lead_title,
+				'first_name'    => $first_name,
+				'last_name'     => $last_name,
+				'email'         => $email,
+				'mobile'        => $mobile,
+				'home_phone'    => isset($_POST['home_phone']) ? sanitize_text_field($_POST['home_phone']) : '',
+				'work_phone'    => isset($_POST['work_phone']) ? sanitize_text_field($_POST['work_phone']) : '',
+				'address'       => isset($_POST['address']) ? sanitize_text_field($_POST['address']) : '',
+				'city'          => isset($_POST['city']) ? sanitize_text_field($_POST['city']) : '',
+				'state'         => isset($_POST['state']) ? sanitize_text_field($_POST['state']) : '',
+				'country'       => isset($_POST['country']) ? sanitize_text_field($_POST['country']) : '',
+				'zipcode'       => isset($_POST['zip']) ? sanitize_text_field($_POST['zip']) : '',
+				'type'          => isset($_POST['user_type']) ? houzez_crm_get_form_user_type(sanitize_text_field($_POST['user_type'])) : '',
+				'source'        => isset($_POST['source']) ? sanitize_text_field($_POST['source']) : '',
+				'source_link'   => isset($_POST['source_link']) ? esc_url($_POST['source_link']) : '',
+				'twitter_url'   => isset($_POST['twitter']) ? sanitize_text_field($_POST['twitter']) : '',
+				'linkedin_url'  => isset($_POST['linkedin']) ? sanitize_text_field($_POST['linkedin']) : '',
+				'facebook_url'  => isset($_POST['facebook']) ? sanitize_text_field($_POST['facebook']) : '',
+				'private_note'  => isset($_POST['private_note']) ? sanitize_textarea_field($_POST['private_note']) : '',
+				'message'       => isset($_POST['message']) ? sanitize_textarea_field($_POST['message']) : '',
+			);
+		
+			$leads_table = $wpdb->prefix . 'houzez_crm_leads';
+		
+			// Check if a lead with the same email exists
+			if (!empty($email)) {
+				$existing_lead = $wpdb->get_row(
+					$wpdb->prepare("SELECT * FROM $leads_table WHERE email = %s", $email),
+					OBJECT
+				);
+		
+				if ($existing_lead) {
+					// Update existing lead
+					$wpdb->update(
+						$leads_table,
+						$data,
+						array('email' => $email), // WHERE clause
+						array(
+							'%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 
+							'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 
+							'%s', '%s', '%s', '%s'
+						),
+						array('%s') // WHERE clause format
+					);
+					return $existing_lead->lead_id;
 				}
-			} 
-
-			$message = isset( $_POST['message'] ) ? sanitize_textarea_field($_POST['message']) : '';
-
-			if( (isset($_POST['houzez_contact_form']) && $_POST['houzez_contact_form'] == 'yes') || (isset($_POST['is_estimation']) && $_POST['is_estimation'] == 'yes') || empty($user_id) ) {
-
-				$adminData = get_user_by( 'email', get_option( 'admin_email' ) );
-				$user_id = $adminData->ID;
 			}
-
-			if( isset($_POST['dashboard_lead']) && $_POST['dashboard_lead'] == 'yes' ) {
-				$user_id = get_current_user_id();
-			}
-
-            $leads_table        = $wpdb->prefix . 'houzez_crm_leads';
-	        $data = array(
-	        	'user_id'       => $user_id,
-                'prefix'        => $prefix,
-                'display_name'  => $lead_title,
-                'first_name'    => $first_name,
-                'last_name'     => $last_name,
-                'email'         => $email,
-                'mobile'        => $mobile,
-                'home_phone'    => $home_phone,
-                'work_phone'    => $work_phone,
-                'address'       => $address,
-                'city'          => $city,
-                'state'         => $state,
-                'country'       => $country,
-                'zipcode'       => $zip,
-                'type'          => $user_type,
-                'status'        => '',
-                'source'        => $source,
-                'source_link'        => $source_link,
-                'enquiry_to'        => $agent_id,
-                'enquiry_user_type' => $agent_type,
-                'twitter_url'   => $twitter,
-                'linkedin_url'  => $linkedin,
-                'facebook_url'  => $facebook,
-                'private_note'  => $private_note,
-                'message'  => $message
-            );
-
-            $format = array(
-                '%d',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%d',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-                '%s',
-            );
-
-            $wpdb->insert($leads_table, $data, $format);
-            $inserted_id = $wpdb->insert_id;
-            return $inserted_id;
-
+		
+			// Insert new lead if no existing record found
+			$wpdb->insert($leads_table, $data, array(
+				'%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
+				'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
+				'%s', '%s', '%s', '%s'
+			));
+		
+			return $wpdb->insert_id;
 		}
+		
 
 		public function update_lead($lead_id) {
 
@@ -939,10 +797,10 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 			// Retrieving the search keyword
 			$keyword = isset($_GET['keyword']) ? sanitize_text_field(trim($_GET['keyword'])) : '';
 		
-			// Basic query to retrieve all data
+			// Base query to retrieve data
 			$query = "SELECT * FROM {$table_name}";
 		
-			// If keyword is present, modify the query to include search condition
+			// Add keyword filtering
 			if (!empty($keyword)) {
 				$query .= $wpdb->prepare(
 					" WHERE (mobile LIKE '%%%s%%' OR email LIKE '%%%s%%' OR first_name LIKE '%%%s%%' OR last_name LIKE '%%%s%%')",
@@ -950,12 +808,18 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 				);
 			}
 		
-			$total_query = "SELECT COUNT(1) FROM ({$query}) AS combined_table"; // No need for prepare here
+			// Check if email exists and group by email, excluding empty ones
+			$query .= " GROUP BY CASE WHEN email IS NULL OR email = '' THEN lead_id ELSE email END";
+		
+			// Count total grouped results
+			$total_query = "SELECT COUNT(*) FROM ({$query}) AS grouped_table";
 			$total = $wpdb->get_var($total_query);
 		
+			// Paginate and order the grouped query
 			$results_query = $query . $wpdb->prepare(' ORDER BY lead_id DESC LIMIT %d, %d', $offset, $items_per_page);
 			$results = $wpdb->get_results($results_query, OBJECT);
 		
+			// Returning results
 			$return_array['data'] = array(
 				'results' => $results,
 				'total_records' => $total,
@@ -965,6 +829,7 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 		
 			return $return_array;
 		}
+		
 		
 		
 		public static function get_all_leads() {

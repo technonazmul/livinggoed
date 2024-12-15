@@ -22,7 +22,17 @@ global $property_data;
         $table_name = $wpdb->prefix . 'houzez_crm_leads';
         
         // Fetch results
-        $sql = "SELECT * FROM $table_name";
+        $sql = "
+            SELECT *
+            FROM $table_name
+            GROUP BY 
+                CASE 
+                    WHEN email IS NULL OR email = '' THEN lead_id
+                    ELSE email
+                END
+            ORDER BY lead_id DESC
+        ";
+
         $results = $wpdb->get_results($sql, OBJECT);
         // Build options
         $output = '';
