@@ -104,10 +104,9 @@ if ( ! class_exists( 'Houzez_CRM_Notes' ) ) {
 
 		    // Use prepare() to secure the SQL query
 		    $sql = $wpdb->prepare(
-		        "SELECT * FROM $table_name WHERE type = %s AND belong_to = %d AND user_id = %d ORDER BY note_id DESC",
+		        "SELECT * FROM $table_name WHERE type = %s AND belong_to = %d ORDER BY note_id DESC",
 		        $type,
-		        $belong_to,
-		        $user_id
+		        $belong_to
 		    );
 
 		    $results = $wpdb->get_results($sql, OBJECT);

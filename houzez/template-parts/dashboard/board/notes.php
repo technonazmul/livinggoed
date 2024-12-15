@@ -2,6 +2,7 @@
 // Sanitize and validate the 'lead-id' input
 $belong_to = isset($_GET['lead-id']) ? intval($_GET['lead-id']) : 0; // Using intval() to convert to integer and ensure it's safe
 $notes = Houzez_CRM_Notes::get_notes($belong_to, 'lead');
+$user_id = get_current_user_id();
 ?>
 <div class="form-group">
     <textarea class="form-control" id="note" rows="5" placeholder="<?php esc_html_e('Type your note here...', 'houzez'); ?>"></textarea>
@@ -16,24 +17,39 @@ $notes = Houzez_CRM_Notes::get_notes($belong_to, 'lead');
 
 <div id="notes-main-wrap">
 <?php
-if(!empty($notes)) {
-    foreach ($notes as $data) { $datetime = strtotime($data->time);?>
+if (!empty($notes)) {
+    foreach ($notes as $data) { 
+        $datetime = strtotime($data->time);
+        
+        // Fetch user information
+        $user_info = get_userdata($data->user_id);
+        $user_name = $user_info ? $user_info->display_name : __('Unknown User', 'houzez');
+        ?>
 
         <div class="private-note-wrap">
             <p class="activity-time">
-            <?php printf( __( '%s ago', 'houzez' ), human_time_diff( $datetime, current_time( 'timestamp' ) ) ); ?>
+            <?php printf(__(' %s ago', 'houzez'), human_time_diff($datetime, current_time('timestamp'))); ?>
             </p>
-            <p><?php echo esc_attr($data->note); ?></p>
+
+            <p><strong><?php echo esc_html($user_name); ?>:</strong> <?php echo esc_attr($data->note); ?></p>
+
+            <?php 
+            if ($user_id == $data->user_id) {
+            ?>
             <div class="text-right">
                 <a class="delete_note" data-id="<?php echo intval($data->note_id); ?>" href="#" class="ml-3">
                     <i class="houzez-icon icon-remove-circle mr-1"></i> 
                     <strong><?php esc_html_e('Delete', 'houzez'); ?></strong>
                 </a>
             </div>
+            <?php 
+            }
+            ?>
         </div>
 
-<?php
+    <?php
     }
 }
 ?>
+
 </div>
