@@ -30,7 +30,7 @@ global $property_data;
             if($property_data->lead_id == $user->lead_id) {
                 $output .= '<option selected value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name) . '</option>';
             }else {
-                $output .= '<option value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name." ".$user->email." ".$user->mobile) . '</option>';
+                $output .= '<option value="' . esc_attr($user->lead_id) . '">' . esc_html($user->display_name) . '</option>';
             }
            
             
