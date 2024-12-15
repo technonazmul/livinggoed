@@ -845,7 +845,7 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 		    global $wpdb;
 		    $table_name = $wpdb->prefix . 'houzez_crm_leads';
 		    $current_user_id = get_current_user_id();
-		    $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE lead_id = %d AND user_id = %d", $lead_id, $current_user_id);
+		    $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE lead_id = %d ", $lead_id);
 		    $result = $wpdb->get_row($sql, OBJECT);
 		    if (is_object($result) && !empty($result)) {
 		        return $result;
@@ -993,10 +993,9 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 	        $deleted = $wpdb->query( 
 				$wpdb->prepare( 
 					"DELETE FROM {$table_name}
-					 WHERE lead_id = %d AND user_id = %d
+					 WHERE lead_id = %d
 					",
-				        $lead_id,
-				        $user_id
+				        $lead_id
 			        )
 			);
 
