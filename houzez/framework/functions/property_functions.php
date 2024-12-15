@@ -174,6 +174,23 @@ if( !function_exists('houzez_property_gallery_class') ) {
     }
 }
 
+function custom_add_lead_id_to_wp_posts( $post_id, $lead_id ) {
+    global $wpdb;
+
+    // Sanitize inputs
+    $post_id = intval($post_id);
+    $lead_id = sanitize_text_field($lead_id);
+
+    // Update the 'lead_id' column in wp_posts table
+    $wpdb->update(
+        $wpdb->posts, // Table name
+        array( 'lead_id' => $lead_id ), // Data to update
+        array( 'ID' => $post_id ), // Where clause
+        array( '%s' ), // Format for data
+        array( '%d' )  // Format for where clause
+    );
+}
+
 /*-----------------------------------------------------------------------------------*/
 // Submit Property filter
 /*-----------------------------------------------------------------------------------*/
@@ -215,9 +232,7 @@ if( !function_exists('houzez_submit_listing') ) {
         }
 
         $new_property['post_author'] = $post_author;
-        if( isset( $_POST['lead_id'] )) {
-            $new_property['lead_id'] = $_POST['lead_id'];
-        }
+        
 
         $submission_action = $_POST['action'];
         $prop_id = 0;
@@ -291,14 +306,18 @@ if( !function_exists('houzez_submit_listing') ) {
             /*
              * Filter submission arguments before update property.
              */
-            //$new_property = apply_filters( 'houzez_before_update_property', $new_property );
-            print_r($new_property);
-            
+            $new_property = apply_filters( 'houzez_before_update_property', $new_property );
+           
+            $new_property['lead_id'] = 1;
             $prop_id = wp_update_post( $new_property );
 
         }
 
         if( $prop_id > 0 ) {
+            if(isset($_POST['lead_id'])) {
+                custom_add_lead_id_to_wp_posts( $prop_id, $_POST['lead_id'] );
+            }
+            
 
 
             if(class_exists('Houzez_Fields_Builder')) {
