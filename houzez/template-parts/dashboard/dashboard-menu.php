@@ -2,6 +2,7 @@
 global $houzez_local;
 
 $userID = get_current_user_id();
+$template_tasks = houzez_get_template_link_2('template/template_tasks.php');
 $dash_profile_link = houzez_get_template_link_2('template/user_dashboard_profile.php');
 $dashboard_insight = houzez_get_template_link_2('template/user_dashboard_insight.php');
 $dashboard_properties = houzez_get_template_link_2('template/user_dashboard_properties.php');
@@ -306,7 +307,11 @@ $expired_post_count = houzez_user_posts_count('expired');
 					</a>
 				</li>';	
 		}
-
+		$side_menu .= '<li class="side-menu-item">
+				<a href="'.esc_url($template_tasks).'">
+					<i class="houzez-icon icon-lock-5 mr-2"></i> Tasks
+				</a>
+			</li>';
 	    $side_menu .= '<li class="side-menu-item">
 				<a href="' . wp_logout_url( home_url() ) . '">
 					<i class="houzez-icon icon-lock-5 mr-2"></i> '.houzez_option('dsh_logout', 'Log out').'

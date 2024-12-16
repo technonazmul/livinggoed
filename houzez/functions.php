@@ -682,3 +682,209 @@ if( ! function_exists('houzez_update_existing_users_with_manager_role_once') ) {
 	// Run the function to update users
 	houzez_update_existing_users_with_manager_role_once();
 }
+
+
+/**
+ * Task Management System for WordPress
+ * Include this code in your theme's `functions.php` file.
+ */
+
+// Hook for creating the database table on theme activation
+add_action('after_switch_theme', 'create_task_management_table');
+function create_task_management_table() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'tasks';
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+        id INT(11) NOT NULL AUTO_INCREMENT,
+        task_name VARCHAR(255) NOT NULL,
+        task_description TEXT DEFAULT NULL,
+        task_type VARCHAR(100) DEFAULT NULL,
+        priority VARCHAR(50) DEFAULT 'Medium',
+        priority_weight TINYINT(1) DEFAULT 2,
+        lead_id INT(11) NULL,
+        user_ids VARCHAR(255) DEFAULT NULL,
+        start_date DATETIME DEFAULT NULL,
+        due_date DATETIME DEFAULT NULL,
+        completion_date DATETIME DEFAULT NULL,
+        status VARCHAR(50) DEFAULT 'Pending',
+        status_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        attachments VARCHAR(255) DEFAULT NULL,
+        progress TINYINT(3) DEFAULT 0,
+        notes TEXT DEFAULT NULL,
+        created_by INT(11) NULL,
+        is_recurring BOOLEAN DEFAULT FALSE,
+        tags VARCHAR(255) DEFAULT NULL,
+        property_id VARCHAR(255) DEFAULT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}
+
+// Shortcode for task creation form
+add_shortcode('task_creation_form', 'render_task_creation_form');
+function render_task_creation_form() {
+    global $wpdb;
+
+    // Handle form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_task'])) {
+        $table_name = $wpdb->prefix . 'tasks';
+
+        $data = [
+            'task_name'        => sanitize_text_field($_POST['task_name']),
+            'task_description' => sanitize_textarea_field($_POST['task_description']),
+            'task_type'        => sanitize_text_field($_POST['task_type']),
+            'priority'         => sanitize_text_field($_POST['priority']),
+            'priority_weight'  => intval($_POST['priority_weight']),
+            'lead_id'          => intval($_POST['lead_id']),
+            'user_id'          => intval($_POST['user_id']),
+            'start_date'       => sanitize_text_field($_POST['start_date']),
+            'due_date'         => sanitize_text_field($_POST['due_date']),
+            'status'           => sanitize_text_field($_POST['status']),
+            'created_by'       => get_current_user_id(),
+            'notes'            => sanitize_textarea_field($_POST['notes']),
+            'is_recurring'     => isset($_POST['is_recurring']) ? 1 : 0,
+            'tags'             => sanitize_text_field($_POST['tags']),
+        ];
+
+        $wpdb->insert($table_name, $data);
+        echo '<p>Task successfully created!</p>';
+    }
+
+    // Render the form
+    ob_start();
+    ?>
+    <form method="post">
+    <div class="mb-3">
+        <label for="task_name" class="form-label">Task Name:</label>
+        <input type="text" id="task_name" name="task_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="task_description" class="form-label">Task Description:</label>
+        <textarea id="task_description" name="task_description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="task_type" class="form-label">Task Type:</label>
+        <input type="text" id="task_type" name="task_type" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="priority" class="form-label">Priority:</label>
+        <select id="priority" name="priority" class="form-select">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="lead_id" class="form-label">Lead ID:</label>
+        <input type="number" id="lead_id" name="lead_id" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+    <label for="user_id" class="form-label">Assign User:</label>
+    <select id="user_id" name="user_id" class="form-select" required>
+        <option value="">Select User</option>
+        <?php
+        $users = get_users(); // Fetch all WordPress users
+        foreach ($users as $user) {
+            echo '<option value="' . esc_attr($user->ID) . '">' . esc_html($user->display_name) . '</option>';
+        }
+        ?>
+    </select>
+</div>
+
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="start_date" class="form-label">Start Date:</label>
+            <input type="datetime-local" id="start_date" name="start_date" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label for="due_date" class="form-label">Due Date:</label>
+            <input type="datetime-local" id="due_date" name="due_date" class="form-control">
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label">Status:</label>
+        <select id="status" name="status" class="form-select">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="notes" class="form-label">Notes:</label>
+        <textarea id="notes" name="notes" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" id="is_recurring" name="is_recurring" class="form-check-input">
+        <label for="is_recurring" class="form-check-label">Recurring</label>
+    </div>
+
+    <div class="mb-3">
+        <label for="tags" class="form-label">Tags:</label>
+        <input type="text" id="tags" name="tags" class="form-control">
+    </div>
+
+    <button type="submit" name="create_task" class="btn btn-primary">Create Task</button>
+</form>
+
+    <?php
+    return ob_get_clean();
+}
+
+// Shortcode for displaying tasks
+add_shortcode('task_list', 'render_task_list');
+function render_task_list() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'tasks';
+    $tasks = $wpdb->get_results("SELECT * FROM $table_name");
+
+    ob_start();
+    ?>
+    <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Task Name</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Lead ID</th>
+            <th>Assigned User</th>
+            <th>Start Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($tasks as $task): ?>
+            <tr>
+                <td><?php echo $task->id; ?></td>
+                <td><?php echo esc_html($task->task_name); ?></td>
+                <td><?php echo esc_html($task->task_description); ?></td>
+                <td><?php echo esc_html($task->priority); ?></td>
+                <td><?php echo $task->lead_id; ?></td>
+                <td><?php echo $task->user_id; ?></td>
+                <td><?php echo $task->start_date; ?></td>
+                <td><?php echo $task->due_date; ?></td>
+                <td><?php echo $task->status; ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+    <?php
+    return ob_get_clean();
+}
+?>
