@@ -18,7 +18,9 @@ if( isset($_GET['enquiry']) ) {
 	if(empty($display_name)) {
 		$display_name = $first_name.' '.$last_name;
 	}
-
+	if (!isset($enquiry->email)) {
+		$enquiry->email = '';
+	}
 	$lead_link = add_query_arg(
         array(
             'hpage' => 'lead-detail',

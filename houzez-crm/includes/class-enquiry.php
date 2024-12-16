@@ -539,7 +539,7 @@ if ( ! class_exists( 'Houzez_Enquiry' ) ) {
 
 		    $user_id = get_current_user_id();
 
-		    $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE enquiry_id = %d AND user_id = %d", $enquiry_id, $user_id);
+		    $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE enquiry_id = %d", $enquiry_id);
 
 		    $result = $wpdb->get_row($sql, OBJECT);
 
