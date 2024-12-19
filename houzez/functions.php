@@ -689,6 +689,116 @@ if( ! function_exists('houzez_update_existing_users_with_manager_role_once') ) {
  * Include this code in your theme's `functions.php` file.
  */
 
+
+
+
+// Enqueue FullCalendar scripts and styles
+function enqueue_fullcalendar_scripts() {
+    //wp_enqueue_style('fullcalendar-style', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css', [], '3.8.0');
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js', ['jquery'], '2.29.4', true);
+    wp_enqueue_script('fullcalendar-js', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js', ['jquery', 'moment-js'], '3.8.0', true);
+    wp_enqueue_script('tasks-management-js', get_template_directory_uri() . '/js/en.js', ['jquery', 'fullcalendar-en-js'], time(), true);
+    wp_enqueue_script('tasks-management-js', get_template_directory_uri() . '/js/tasks-management.js', ['jquery', 'fullcalendar-js'], time(), true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_fullcalendar_scripts');
+
+
+
+// Handle AJAX requests for fetching and managing tasks
+add_action('wp_ajax_fetch_tasks', 'fetch_tasks');
+add_action('wp_ajax_save_task', 'save_task');
+add_action('wp_ajax_delete_task', 'delete_task');
+
+// Fetch tasks from the database
+function fetch_tasks() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'tasks';
+    $tasks = $wpdb->get_results("SELECT * FROM $table_name");
+
+    $events = [];
+    foreach ($tasks as $task) {
+        $events[] = [
+            'id' => $task->id,
+            'title' => $task->task_name,
+            'start' => $task->start_date,
+            'end' => $task->due_date,
+            'description' => $task->task_description,
+            'user_id' => $task->user_id,
+            'lead_id' => $task->lead_id,
+            'property_id' => $task->property_id,
+            'remind_before' => $task->remind_before,
+            'task_category' => $task->task_category,
+            'task_duration' => $task->task_duration,
+            'task_status' => $task->task_status,
+            'task_repeat' => $task->task_repeat,
+            'task_address' => $task->task_address,
+        ];
+    }
+
+    wp_send_json($events);
+}
+
+
+// Save a task to the database
+function save_task() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'tasks';
+
+    // Sanitize and retrieve form data
+    $formData = [
+        'task_name' => sanitize_text_field($_POST['task_name'] ?? ''),
+        'user_id' => intval($_POST['user_id'] ?? null),
+        'lead_id' => intval($_POST['lead_id'] ?? null),
+        'property_id' => sanitize_text_field($_POST['property_id'] ?? null),
+        'remind_before' => sanitize_text_field($_POST['remind_before'] ?? null),
+        'task_category' => sanitize_text_field($_POST['task_category'] ?? ''),
+        'start_date' => sanitize_text_field($_POST['start_date'] ?? null),
+        'due_date' => sanitize_text_field($_POST['due_date'] ?? null),
+        'task_duration' => intval($_POST['task_duration'] ?? null),
+        'task_description' => sanitize_textarea_field($_POST['task_description'] ?? ''),
+        'task_status' => sanitize_text_field($_POST['task_status'] ?? 'Pending'),
+        'task_repeat' => sanitize_text_field($_POST['task_repeat'] ?? 'does_not_repeat'),
+        'task_address' => sanitize_text_field($_POST['task_address'] ?? ''),
+    ];
+
+    $task_id = intval($_POST['task_id'] ?? 0);
+
+    if ($task_id) {
+        // Update task
+        $wpdb->update(
+            $table_name,
+            $formData,
+            ['id' => $task_id],
+            array_fill(0, count($formData), '%s'),
+            ['%d']
+        );
+    } else {
+        // Insert new task
+        $wpdb->insert(
+            $table_name,
+            $formData,
+            array_fill(0, count($formData), '%s')
+        );
+    }
+
+    wp_send_json(['success' => true]);
+}
+
+// Delete a task from the database
+function delete_task() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'tasks';
+    $task_id = intval($_POST['task_id'] ?? 0);
+
+    if ($task_id) {
+        $wpdb->delete($table_name, ['id' => $task_id], ['%d']);
+        wp_send_json(['success' => true]);
+    } else {
+        wp_send_json(['success' => false, 'message' => 'Invalid task ID']);
+    }
+}
+
 // Hook for creating the database table on theme activation
 add_action('after_switch_theme', 'create_task_management_table');
 function create_task_management_table() {
@@ -699,31 +809,26 @@ function create_task_management_table() {
 
     $sql = "CREATE TABLE $table_name (
         id INT(11) NOT NULL AUTO_INCREMENT,
-        task_name VARCHAR(255) NOT NULL,
+        task_name VARCHAR(255) DEFAULT NULL,
         task_description TEXT DEFAULT NULL,
-        task_type VARCHAR(100) DEFAULT NULL,
-        priority VARCHAR(50) DEFAULT 'Medium',
-        priority_weight TINYINT(1) DEFAULT 2,
-        lead_id INT(11) NULL,
-        user_ids VARCHAR(255) DEFAULT NULL,
+        user_id INT(11) DEFAULT NULL,
+        lead_id INT(11) DEFAULT NULL,
+        property_id VARCHAR(255) DEFAULT NULL,
+        remind_before VARCHAR(50) DEFAULT NULL,
+        task_category VARCHAR(100) DEFAULT NULL,
         start_date DATETIME DEFAULT NULL,
         due_date DATETIME DEFAULT NULL,
-        completion_date DATETIME DEFAULT NULL,
-        status VARCHAR(50) DEFAULT 'Pending',
-        status_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        attachments VARCHAR(255) DEFAULT NULL,
-        progress TINYINT(3) DEFAULT 0,
-        notes TEXT DEFAULT NULL,
-        created_by INT(11) NULL,
-        is_recurring BOOLEAN DEFAULT FALSE,
-        tags VARCHAR(255) DEFAULT NULL,
-        property_id VARCHAR(255) DEFAULT NULL,
+        task_duration INT(11) DEFAULT NULL,
+        task_status VARCHAR(50) DEFAULT 'Pending',
+        task_repeat VARCHAR(50) DEFAULT 'does_not_repeat',
+        task_address VARCHAR(255) DEFAULT NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 }
+
 
 // Shortcode for task creation form
 add_shortcode('task_creation_form', 'render_task_creation_form');
@@ -888,3 +993,5 @@ function render_task_list() {
     return ob_get_clean();
 }
 ?>
+
+
