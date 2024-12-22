@@ -11,18 +11,98 @@ get_header();
 
 <section class="dashboard-content-wrap">
     <div class="dashboard-content-inner-wrap">
-        <div class="dashboard-content-block-wrap">
-            <h2 class="text-center mb-4">Task Management</h2>
+        <div class="dashboard-content-block-wrap row">
+            <div class="calendar-drawer col-md-3">
+                <div class="row">
+                <div id="mini-calendar" class="col"></div>
+                </div>
+                <p class="mt-5">
+                <a class="" data-toggle="collapse" href="#collapseExampleuser" role="button" aria-expanded="true" aria-controls="collapseExampleuser">
+                    Users
+                </a>
+                
+                </p>
+                <div class="collapse show" id="collapseExampleuser">
+                    <div class="card card-body">
+                        <div class="calendar-filters-user calendar-filter-style">
+                        <?php
+                            $users = get_users();
+                            foreach ($users as $user) {
+                                ?>
+                                <label><input type="checkbox" class="filter" value="<?php echo esc_attr($user->ID); ?>" /> <?php echo esc_html($user->display_name); ?></label>
+                            <?php
+                            }
+                            ?>
+                            
+                        </div>
+                    </div>
+                </div>
 
+                <p class="mt-5">
+                <a class="" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">
+                    Categories
+                </a>
+                
+                </p>
+                <div class="collapse show" id="collapseExample">
+                    <div class="card card-body">
+                        <div class="calendar-filters calendar-filter-style">
+                            <label><input type="checkbox" class="filter" value="Bezichtiging" > Bezichtiging</label>
+                            <label><input type="checkbox" class="filter" value="Intake" > Intake</label>
+                            <label><input type="checkbox" class="filter" value="Contract tekenen" > Contract tekenen</label>
+                            <label><input type="checkbox" class="filter" value="Foto's maken" > Foto's maken</label>
+                            <label><input type="checkbox" class="filter" value="Bellen" > Bellen</label>
+                            <label><input type="checkbox" class="filter" value="Terugbellen" > Terugbellen</label>
+                            <label><input type="checkbox" class="filter" value="Appointment at the office" > Appointment at the office</label>
+                            <label><input type="checkbox" class="filter" value="Bespreking" > Bespreking</label>
+                            <label><input type="checkbox" class="filter" value="Overdracht" > Overdracht</label>
+                            <label><input type="checkbox" class="filter" value="Kennismaking" > Kennismaking</label>
+                            <label><input type="checkbox" class="filter" value="Waardebepaling" > Waardebepaling</label>
+                            <label><input type="checkbox" class="filter" value="Kapper" > Kapper</label>
+                            <label><input type="checkbox" class="filter" value="Lunch" > Lunch</label>
+                            <label><input type="checkbox" class="filter" value="Overige" > Overige</label>
+                            <label><input type="checkbox" class="filter" value="Overleg" > Overleg</label>
+                            <label><input type="checkbox" class="filter" value="Prive" > Prive</label>
+                            <label><input type="checkbox" class="filter" value="Reparatie" > Reparatie</label>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-5">
+                <a class="" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="true" aria-controls="collapseExample2">
+                    Status
+                </a>
+                
+                </p>
+                <div class="collapse show" id="collapseExample2">
+                    <div class="card card-body">
+                        <div class="calendar-filters-status calendar-filter-style">
+                            <label><input type="checkbox" class="filter" value="Bevestigd" > Bevestigd</label>
+                            <label><input type="checkbox" class="filter" value="Bellen voor bevestiging" > Bellen voor bevestiging</label>
+                            <label><input type="checkbox" class="filter" value="Niet bevestigd" > Niet bevestigd</label>
+                            <label><input type="checkbox" class="filter" value="Afgezegd" > Foto's maken</label>
+                            <label><input type="checkbox" class="filter" value="Concept" > Concept</label>
+                            <label><input type="checkbox" class="filter" value="Accepted" > Accepted</label>
+                            <label><input type="checkbox" class="filter" value="Niet verschenen" > Niet verschenen</label>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div><!-- calendar-drawer -->
+            
+            
             <!-- Calendar -->
-            <div id="calendar"></div>
+             <div class="col-md-8">
+                <h2 class="text-center mb-4">Agenda Management</h2>
+             <div id="calendar"></div>
+             </div>
+            
         </div><!-- dashboard-content-block-wrap -->
     </div><!-- dashboard-content-inner-wrap -->
 </section><!-- dashboard-content-wrap -->
 
-<section class="dashboard-side-wrap">
-    <?php get_template_part('template-parts/dashboard/side-wrap'); ?>
-</section>
+
 
 <!-- Task Form Modal -->
 <!-- Task Form Modal -->
@@ -196,6 +276,7 @@ get_header();
     jQuery(document).ready(function ($) {
         const calendarEl = document.getElementById('calendar');
         const $modal = $('#task-form-modal');
+        const miniCalendarEl = document.getElementById('mini-calendar');
         const $overlay = $('<div id="task-form-modal-overlay"></div>');
         $('body').append($overlay);
 
@@ -374,6 +455,87 @@ get_header();
         });
 
         calendar.render();
+
+        // Mini Calendar Initialization (Drawer)
+        const miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'today'
+            },
+            initialView: 'dayGridMonth', // Show the full month view
+            datesRender: function(info) {
+                // Sync the mini calendar date selection with main calendar
+                miniCalendar.setOption('date', info.view.currentStart);
+            },
+            dateClick: function (info) {
+                // Sync the mini calendar date selection with main calendar
+                calendar.gotoDate(info.dateStr);
+            }
+        });
+
+        miniCalendar.render();
+
+                // Handle calendar filters
+            $('.calendar-filters input.filter').on('change', function () {
+                const selectedCategories = [];
+                $('.calendar-filters input.filter:checked').each(function () {
+                    selectedCategories.push($(this).val());
+                });
+
+                calendar.getEvents().forEach(event => {
+                if ($('.calendar-filters input.filter:checked').length === 0) {
+                    event.setProp('display', 'auto'); // Show all events
+                } else if (selectedCategories.includes(event.extendedProps.category)) {
+                    event.setProp('display', 'auto'); // Show event
+                } else {
+                    event.setProp('display', 'none'); // Hide event
+                }
+            });
+
+                
+                
+            });
+            
+            $('.calendar-filters-status input.filter').on('change', function () {
+                const selectedStatus = [];
+                $('.calendar-filters-status input.filter:checked').each(function () {
+                    selectedStatus.push($(this).val());
+                });
+
+                calendar.getEvents().forEach(event => {
+                if ($('.calendar-filters-status input.filter:checked').length === 0) {
+                    event.setProp('display', 'auto'); // Show all events
+                } else if (selectedStatus.includes(event.extendedProps.task_status)) {
+                    event.setProp('display', 'auto'); // Show event
+                } else {
+                    event.setProp('display', 'none'); // Hide event
+                }
+            });
+
+                
+                
+            });
+
+            $('.calendar-filters-user input.filter').on('change', function () {
+                const selecteduser = [];
+                $('.calendar-filters-user input.filter:checked').each(function () {
+                    selecteduser.push($(this).val());
+                });
+
+                calendar.getEvents().forEach(event => {
+                if ($('.calendar-filters-user input.filter:checked').length === 0) {
+                    event.setProp('display', 'auto'); // Show all events
+                } else if (selecteduser.includes(event.extendedProps.user_id)) {
+                    event.setProp('display', 'auto'); // Show event
+                } else {
+                    event.setProp('display', 'none'); // Hide event
+                }
+            });
+
+                
+                
+            });
     });
 </script>
 
@@ -393,6 +555,13 @@ get_header();
 
 
 <style>
+    .dashboard-header-main-wrap, .dashboard-content-wrap {
+    padding-left: 0;
+    margin: 0;
+}
+.elementor-element-7390f8b {
+    display:none;
+}
    #task-form-modal {
         display: none;
         position: fixed;
@@ -474,5 +643,23 @@ get_header();
     background: #005f8d;
 }
 
+.calendar-filter-style {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds space between labels */
+}
+
+.calendar-filter-style label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.calendar-filter-style input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px; /* Adds space between checkbox and text */
+    cursor: pointer; /* Adds a pointer cursor for better UX */
+}
 </style>
 <?php get_footer(); ?>

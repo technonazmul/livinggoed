@@ -724,6 +724,7 @@ function fetch_tasks() {
             'start' => $task->start_date,
             'end' => $task->due_date,
             'description' => $task->task_description,
+            'category' => $task->task_category,
             'user_id' => $task->user_id,
             'lead_id' => $task->lead_id,
             'property_id' => $task->property_id,
