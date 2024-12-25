@@ -444,7 +444,7 @@ class Houzez_Property_Meta_Data extends Widget_Base {
 	    $label_singular = $settings['label_singular'];
 
 	    // Change true to false to get an array of values
-	    $field_data = get_post_meta($post->ID, 'fave_' . $meta_field, false);
+	    $field_data = get_post_meta($post->ID, 'fave_' . $meta_field, true);
 
 	    // Check if $field_data is an array and join the values with a comma
 	    if (is_array($field_data)) {
