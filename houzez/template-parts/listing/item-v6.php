@@ -14,8 +14,18 @@ if( houzez_is_fullwidth_2cols_custom_width() ) {
 				<?php 
 				get_template_part('template-parts/listing/partials/item-featured-label'); 
 				$sale_price = get_post_meta($post->ID, 'fave_sale-price', true);
+				$rental_price = get_post_meta($post->ID, 'fave_rental-price', true);
 				?>
-				<div class="custom-price"><?php echo $sale_price; ?></div>
+				<div class="custom-price">
+					<?php 
+					if(!empty($rental_price)) {
+						echo $rental_price."K.K."." / month";
+					} else {
+						echo $sale_price."K.K.";
+					}
+				
+					?>
+				</div>
 				<?php get_template_part('template-parts/listing/partials/item-labels'); ?>
 
 				<div class="listing-image-wrap">
