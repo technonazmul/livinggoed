@@ -168,6 +168,10 @@ $expired_post_count = houzez_user_posts_count('expired');
 					</a>
 				</li>';
 		}
+		$side_menu .= '<li class="side-menu-item link-leads">
+							<a href="'.esc_url($crm_leads).'"><i class="houzez-icon icon-single-neutral-circle"></i> '.houzez_option('dsh_leads', 'Leads').'</a>
+						</li>';
+		
 
 		if( !empty( $dashboard_properties ) && houzez_check_role() ) {
 			$properties_menu = '';
@@ -309,7 +313,7 @@ $expired_post_count = houzez_user_posts_count('expired');
 		}
 		$side_menu .= '<li class="side-menu-item">
 				<a href="'.esc_url($template_tasks).'">
-					<i class="houzez-icon icon-lock-5 mr-2"></i> Tasks
+					<i class="houzez-icon icon-accounting-document mr-2"></i> Agenda
 				</a>
 			</li>';
 	    $side_menu .= '<li class="side-menu-item">
