@@ -59,7 +59,9 @@ if( houzez_is_fullwidth_2cols_custom_width() ) {
 				</div><!-- d-flex -->
 				<hr style="width: 50%;" />
 				<div class="bottom-btn">
+					<a style="color: white;" href="<?php echo esc_url(get_permalink()); ?>">
 					Booking Details
+					</a>
 				</div>
 			</div><!-- item-body -->
 		</div><!-- d-flex -->
