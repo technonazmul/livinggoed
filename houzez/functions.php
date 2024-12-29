@@ -725,8 +725,8 @@ function fetch_tasks() {
             'end' => $task->due_date,
             'description' => $task->task_description,
             'category' => $task->task_category,
-            'user_id' => $task->user_id,
-            'lead_id' => $task->lead_id,
+            'user_id' => json_decode($task->user_id),  // Decode JSON
+            'lead_id' => json_decode($task->lead_id),  // Decode JSON
             'property_id' => $task->property_id,
             'remind_before' => $task->remind_before,
             'task_category' => $task->task_category,
@@ -749,8 +749,8 @@ function save_task() {
     // Sanitize and retrieve form data
     $formData = [
         'task_name' => sanitize_text_field($_POST['task_name'] ?? ''),
-        'user_id' => intval($_POST['user_id'] ?? null),
-        'lead_id' => intval($_POST['lead_id'] ?? null),
+        'user_id' => json_encode(array_map('intval', $_POST['user_id'] ?? [])),  // Store as JSON
+        'lead_id' => json_encode(array_map('intval', $_POST['lead_id'] ?? [])),  // Store as JSON
         'property_id' => sanitize_text_field($_POST['property_id'] ?? null),
         'remind_before' => sanitize_text_field($_POST['remind_before'] ?? null),
         'task_category' => sanitize_text_field($_POST['task_category'] ?? ''),
@@ -783,6 +783,54 @@ function save_task() {
         );
     }
 
+	
+	 // Send emails to users
+	 $user_ids = json_decode($formData['user_id'], true);
+	 foreach ($user_ids as $user_id) {
+		 $user_info = get_userdata($user_id);
+		 if ($user_info && !empty($user_info->user_email)) {
+			 $email = $user_info->user_email;
+			 $subject = "New Task Assigned: " . $formData['task_name'];
+			 $message = "Hello {$user_info->display_name},\n\n";
+			 $message .= "You have been assigned a new task:\n";
+			 $message .= "Task Name: " . $formData['task_name'] . "\n";
+			 $message .= "Description: " . $formData['task_description'] . "\n";
+			 $message .= "Start Date: " . $formData['start_date'] . "\n";
+			 $message .= "Due Date: " . $formData['due_date'] . "\n";
+			 $message .= "\nPlease log in to your account to view more details.\n\n";
+			 $message .= "Thank you.";
+ 
+			 // Send email
+			 wp_mail($email, $subject, $message);
+		 }
+	 }
+	 $leads_table = $wpdb->prefix . 'houzez_crm_leads';
+
+
+	 // Send emails to leads
+    $lead_ids = json_decode($formData['lead_id'], true);
+    foreach ($lead_ids as $lead_id) {
+        $lead = $wpdb->get_row($wpdb->prepare("SELECT display_name, email FROM $leads_table WHERE id = %d", $lead_id), ARRAY_A);
+
+        if ($lead && !empty($lead['email'])) {
+            $email = $lead['email'];
+            $subject = "New Task Related to You: " . $formData['task_name'];
+            $message = "Hello {$lead['display_name']},\n\n";
+            $message .= "A new task related to you has been created:\n";
+            $message .= "Task Name: " . $formData['task_name'] . "\n";
+            $message .= "Description: " . $formData['task_description'] . "\n";
+            $message .= "Start Date: " . $formData['start_date'] . "\n";
+            $message .= "Due Date: " . $formData['due_date'] . "\n";
+            $message .= "\nPlease contact us for more information.\n\n";
+            $message .= "Thank you.";
+
+            // Send email
+            wp_mail($email, $subject, $message);
+        }
+    }
+
+
+
     wp_send_json(['success' => true]);
 }
 
@@ -812,14 +860,14 @@ function create_task_management_table() {
         id INT(11) NOT NULL AUTO_INCREMENT,
         task_name VARCHAR(255) DEFAULT NULL,
         task_description TEXT DEFAULT NULL,
-        user_id INT(11) DEFAULT NULL,
-        lead_id INT(11) DEFAULT NULL,
+        user_id TEXT DEFAULT NULL,
+        lead_id TEXT DEFAULT NULL,
         property_id VARCHAR(255) DEFAULT NULL,
         remind_before VARCHAR(50) DEFAULT NULL,
         task_category VARCHAR(100) DEFAULT NULL,
         start_date DATETIME DEFAULT NULL,
         due_date DATETIME DEFAULT NULL,
-        task_duration INT(11) DEFAULT NULL,
+        task_duration VARCHAR(255) DEFAULT NULL,
         task_status VARCHAR(50) DEFAULT 'Pending',
         task_repeat VARCHAR(50) DEFAULT 'does_not_repeat',
         task_address VARCHAR(255) DEFAULT NULL,

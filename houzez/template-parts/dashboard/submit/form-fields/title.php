@@ -50,6 +50,7 @@ global $property_data;
 
         ?>
     </select>
+    </div>
 </div>
 
 <div class="form-group">

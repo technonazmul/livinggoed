@@ -117,8 +117,7 @@ get_header();
                 <input type="text" id="task_name" name="task_name" required>
 
                 <label for="user_id" class="form-label">Assign User</label>
-                <select id="user_id" name="user_id" class="form-select" required>
-                    <option value="">Select User</option>
+                <select id="user_id" name="user_id[]" class="form-control selectpicker" multiple required>
                     <?php
                     $users = get_users();
                     foreach ($users as $user) {
@@ -128,7 +127,7 @@ get_header();
                 </select>
 
                 <label for="lead_id" class="form-label">Card</label>
-                <select name="lead_id" id="lead_id" class="lead_id selectpicker form-control property-lead-js" data-live-search="true" data-size="5" tabindex="null">
+                <select multiple name="lead_ids[]" id="lead_id" class="lead_id selectpicker form-control property-lead-js" data-live-search="true" data-size="5" tabindex="null">
                     <option value="">Select Card</option>
                     <?php
                     global $wpdb;
@@ -280,6 +279,10 @@ get_header();
         const $overlay = $('<div id="task-form-modal-overlay"></div>');
         $('body').append($overlay);
 
+        const getMultiSelectValues = (selector) => {
+            return $(selector).val() || []; // Return an empty array if no value is selected
+        };
+
         // Function to show the modal
         function showModal() {
             $overlay.show();
@@ -306,6 +309,16 @@ get_header();
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
+            slotLabelFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false // Disable 12-hour format, enabling 24-hour
+        },
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false // Disable 12-hour format for event times
+        },
             initialView: 'timeGridDay',
             editable: true,
             selectable: true,
@@ -318,12 +331,12 @@ get_header();
 
                 $('#task-form').off('submit').on('submit', function (e) {
                     e.preventDefault();
-
+                    
                     const formData = {
                         action: 'save_task',
                         task_name: $('#task_name').val(),
-                        user_id: $('#user_id').val(),
-                        lead_id: $('#lead_id').val(),
+                        user_id: getMultiSelectValues('#user_id'),
+                        lead_id: getMultiSelectValues('#lead_id'),
                         property_id: $('#property_id').val(),
                         remind_before: $('#remind_before').val(),
                         task_category: $('#task_category').val(),
@@ -359,14 +372,23 @@ get_header();
             eventClick: function (info) {
                 showModal();
 
+                const formatDateTime = (date) => {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0'); // 24-hour format
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${year}-${month}-${day}T${hours}:${minutes}`;
+                };
+
                 $('#task_name').val(info.event.title);
                 $('#user_id').val(info.event.extendedProps.user_id);
                 $('#lead_id').val(info.event.extendedProps.lead_id);
                 $('#property_id').val(info.event.extendedProps.property_id);
                 $('#remind_before').val(info.event.extendedProps.remind_before);
                 $('#task_category').val(info.event.extendedProps.task_category);
-                $('#start_date').val(info.event.start.toISOString().slice(0, 16));
-                $('#due_date').val(info.event.end ? info.event.end.toISOString().slice(0, 16) : '');
+                $('#start_date').val(formatDateTime(info.event.start));
+                $('#due_date').val(info.event.end ? formatDateTime(info.event.end) : '');
                 $('#task_duration').val(info.event.extendedProps.task_duration);
                 $('#task_description').val(info.event.extendedProps.description);
                 $('#task_status').val(info.event.extendedProps.task_status);
