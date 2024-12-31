@@ -13,8 +13,7 @@ if( houzez_is_fullwidth_2cols_custom_width() ) {
 			<div class="item-header">
 				<?php 
 				get_template_part('template-parts/listing/partials/item-featured-label'); 
-				$sale_price = get_post_meta($post->ID, 'fave_sale-price', true);
-				$rental_price = get_post_meta($post->ID, 'fave_rental-price', true);
+				
 				?>
 				<div class="custom-price">
 				<?php echo houzez_listing_price_v5(); ?>
