@@ -45,7 +45,7 @@ if( houzez_is_fullwidth_2cols_custom_width() ) {
 				<hr/>
 				<div class="d-flex align-items-center amenities-price-wrap pb-2 pt-2">
 					<ul class="item-price-wrap">
-						<li class="item-price"><?php echo houzez_listing_price_v5(); ?></li>
+						
 					</ul>
 					<?php get_template_part('template-parts/listing/partials/item-features-v6'); ?>
 				</div><!-- d-flex -->
