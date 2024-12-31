@@ -236,7 +236,9 @@ if( !function_exists('houzez_get_property_price') ) {
             
             $currency_maker = currency_maker();
 
-            $listings_currency = $currency_maker['currency'];
+            //$listings_currency = $currency_maker['currency'];
+
+            $listings_currency = '';
             $price_decimals = $currency_maker['decimals'];
             $listing_currency_pos = $currency_maker['currency_position'];
             $price_thousands_separator = $currency_maker['thousands_separator'];
@@ -902,6 +904,8 @@ if( !function_exists('houzez_listing_price_v5') ) {
 
         if (!empty( $price_postfix )) {
             $price_postfix = $price_separator . $price_postfix;
+            
+            
         }
         
         if(empty($second_price)) {

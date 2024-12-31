@@ -1,21 +1,34 @@
 <div class="form-group">
-	<select name="status[]" data-size="5" class="selectpicker status-js <?php houzez_ajax_search(); ?> form-control bs-select-hidden" title="<?php echo houzez_option('srh_status', 'Status'); ?>" data-live-search="false" data-selected-text-format="count > 1" data-live-search-normalize="true" data-actions-box="true" <?php houzez_multiselect(houzez_option('ms_status', 0)); ?> data-select-all-text="<?php echo houzez_option('cl_select_all', 'Select All'); ?>" data-deselect-all-text="<?php echo houzez_option('cl_deselect_all', 'Deselect All'); ?>" data-none-results-text="<?php echo houzez_option('cl_no_results_matched', 'No results matched');?> {0}" data-count-selected-text="{0} <?php echo houzez_option('srh_statuses', 'Statues'); ?>" data-container="body">
-		<?php
-		global $post; 
-		if( !houzez_is_multiselect(houzez_option('ms_status', 0)) ) {
-			echo '<option value="">'.houzez_option('srh_status', 'Status').'</option>';
-		}
+    <?php
+    global $post;
 
-		$args = array(
-            'exclude' => houzez_option('search_exclude_status')
-        );
+    $args = array(
+        'taxonomy'   => 'property_status', // Taxonomy to fetch
+        'exclude'    => houzez_option('search_exclude_status', array()),
+        'hide_empty' => false, // Include terms even if they have no posts
+    );
 
-        $fave_status = get_post_meta(houzez_postid(), 'fave_status', false);
-        $default_status = isset($fave_status) && is_array($fave_status) ? $fave_status : array();
+    $terms = get_terms($args); // Fetch taxonomy terms
 
-		$status = isset($_GET['status']) ? $_GET['status'] : $default_status;
-        houzez_get_search_taxonomies('property_status', $status, $args );
+    $fave_status = get_post_meta(houzez_postid(), 'fave_status', false);
+    $default_status = isset($fave_status) && is_array($fave_status) ? $fave_status : array();
 
-		?>
-	</select><!-- selectpicker -->
+    $status = isset($_GET['status']) ? $_GET['status'] : $default_status;
+
+    if (!is_wp_error($terms) && !empty($terms)) {
+        foreach ($terms as $term) {
+            $checked = in_array($term->slug, $status) ? 'checked' : '';
+            ?>
+            <div class="checkbox">
+                <label>
+                    <input style="width: 25px; height: 16px; color: blue;" type="checkbox" name="status[]" value="<?php echo esc_attr($term->slug); ?>" <?php echo $checked; ?>>
+                    <?php echo esc_html($term->name); ?>
+                </label>
+            </div>
+            <?php
+        }
+    } else {
+        echo '<p>' . esc_html__('No statuses found.', 'houzez') . '</p>';
+    }
+    ?>
 </div><!-- form-group -->

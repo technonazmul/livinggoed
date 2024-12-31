@@ -581,6 +581,9 @@ get_header();
     padding-left: 0;
     margin: 0;
 }
+.fc-scrollgrid-sync-table {
+    cursor: pointer;
+}
 .elementor-element-7390f8b {
     display:none;
 }

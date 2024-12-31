@@ -1,18 +1,33 @@
 <div class="form-group">
-	<select name="type[]" data-size="5" class="selectpicker <?php houzez_ajax_search(); ?> form-control bs-select-hidden" title="<?php echo houzez_option('srh_type', 'Type'); ?>" data-live-search="true" data-selected-text-format="count > 1" data-actions-box="true"  <?php houzez_multiselect(houzez_option('ms_type', 1)); ?> data-select-all-text="<?php echo houzez_option('cl_select_all', 'Select All'); ?>" data-deselect-all-text="<?php echo houzez_option('cl_deselect_all', 'Deselect All'); ?>" data-live-search-normalize="true" data-count-selected-text="{0} <?php echo houzez_option('srh_types', 'Types'); ?>" data-none-results-text="<?php echo houzez_option('cl_no_results_matched', 'No results matched');?> {0}" data-container="body">
+    <?php
+    global $post;
 
-		<?php
-		global $post;
-		if( !houzez_is_multiselect(houzez_option('ms_type', 1)) ) {
-			echo '<option value="">'.houzez_option('srh_type', 'Type').'</option>';
-		}
+    $args = array(
+        'taxonomy'   => 'property_type', // Taxonomy for property types
+        'hide_empty' => false, // Include terms even if they have no posts
+    );
 
-		$fave_types = get_post_meta(houzez_postid(), 'fave_types', false);
-        $default_types = isset($fave_types) && is_array($fave_types) ? $fave_types : array();
+    $terms = get_terms($args); // Fetch taxonomy terms
 
-		$type = isset($_GET['type']) ? $_GET['type'] : $default_types;
-        houzez_get_search_taxonomies('property_type', $type );
+    $fave_types = get_post_meta(houzez_postid(), 'fave_types', false);
+    $default_types = isset($fave_types) && is_array($fave_types) ? $fave_types : array();
 
-		?>
-	</select><!-- selectpicker -->
+    $type = isset($_GET['type']) ? $_GET['type'] : $default_types;
+
+    if (!is_wp_error($terms) && !empty($terms)) {
+        foreach ($terms as $term) {
+            $checked = in_array($term->slug, $type) ? 'checked' : '';
+            ?>
+            <div class="checkbox">
+                <label>
+                    <input style="width: 25px; height: 16px; color: blue;" type="checkbox" name="type[]" value="<?php echo esc_attr($term->slug); ?>" <?php echo $checked; ?>>
+                    <?php echo esc_html($term->name); ?>
+                </label>
+            </div>
+            <?php
+        }
+    } else {
+        echo '<p>' . esc_html__('No property types found.', 'houzez') . '</p>';
+    }
+    ?>
 </div><!-- form-group -->
