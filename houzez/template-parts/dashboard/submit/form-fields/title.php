@@ -17,6 +17,7 @@ global $property_data;
     <label>Select Lead</label>
    
     <select name="lead_id" id="property-author-js" class="selectpicker form-control property-lead-js" data-live-search="true" data-size="5">
+        <option value="">Select</option>
         <?php
         global $wpdb;
         $table_name = $wpdb->prefix . 'houzez_crm_leads';
