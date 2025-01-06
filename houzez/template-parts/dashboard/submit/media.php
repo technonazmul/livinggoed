@@ -67,7 +67,7 @@ $gallery_image_req = houzez_option('gallery_image_req', 1);
                 <div class="upload-image-counter" bis_skin_checked="1"><span class="uploaded"><?php echo esc_attr($property_images_count); ?></span> / <?php echo houzez_option('max_prop_images'); ?></div>
                 <div>
                     <?php echo houzez_option('cl_drag_drop_title', 'Drag and drop the gallery images here'); ?><br>
-                    <span><?php echo houzez_option('cl_image_size', '(Minimum size 1440x900)'); ?></span><br>
+                    
                     <span><?php echo houzez_option('cl_image_featured', 'To mark an image as featured, click the star icon. If no image is marked as featured, the first image will be considered the featured image.'); ?></span>
                 </div>
                 <a id="select_gallery_images" href="javascript:;" class="btn btn-primary btn-left-icon"><i class="houzez-icon icon-upload-button mr-1"></i> <?php echo houzez_option('cl_image_btn', 'Select and Upload'); ?></a>
