@@ -1041,6 +1041,1277 @@ function render_task_list() {
     <?php
     return ob_get_clean();
 }
+
+
+// Shortcode for custom search
+add_shortcode('custom_search_form', 'render_custom_search_form');
+
+function render_custom_search_form() {
+	 // Add inline CSS
+	  // Enqueue CSS and JS for shortcode
+	  wp_enqueue_style('my-shortcode-style', get_template_directory_uri() . '/css/customsearch/style.css');
+	  wp_enqueue_script('my-shortcode-script', get_template_directory_uri() . '/js/customsearch/script.js', array('jquery'), null, true);
+	
+	  ob_start();
+	  ?>
+	  <aside id="sidebar" class="sidebar-white">
+		<div
+			id="houzez_advanced_search-2"
+			class="widget widget_houzez_advanced_search"
+		>
+			<div class="widget-top"><h3 class="widget-title">Search</h3></div>
+			<div class="widget-range">
+			<div class="widget-body">
+				<div class="widget-body-title">Zoeken</div>
+				<div class="panel_count_filter">
+				<span class="count_filter"><span>0</span> filters</span
+				><a href="?" class="clear_filter"></a>
+				</div>
+				<form
+				autocomplete="off"
+				method="get"
+				action="https://curacao3d.getexperthere.online/search-results/"
+				class="houzez-search-form-js houzez-search-builder-form-js"
+				>
+				<div class="range-block rang-form-block">
+					<div class="row">
+					<div class="col-sm-12 col-xs-12 keyword_search">
+						<div class="form-group">
+						<input
+							type="text"
+							class="houzez_geocomplete form-control"
+							value=""
+							name="keyword"
+							placeholder="Voer een adres, stad, straat, postcode of object-ID in"
+						/>
+						<div id="auto_complete_ajax" class="auto-complete"></div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<input
+							type="text"
+							class="form-control"
+							value=""
+							name="property_id"
+							placeholder="Object ID"
+						/>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group"></div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="status[]"
+								value="huur"
+								id="sel__radio-huur"
+								<?php 
+									if (isset($_GET['status']) && is_array($_GET['status']) && in_array('huur', $_GET['status'])) {
+										echo 'checked';
+									}
+								?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-huur">Huur</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="status[]"
+								value="koop"
+								id="sel__radio-koop"
+								<?php 
+									if (isset($_GET['status']) && is_array($_GET['status']) && in_array('koop', $_GET['status'])) {
+										echo 'checked';
+									}
+								?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-koop">Koop</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div class="form-group prices-for-all">
+						<select name="min-price" class="sel_picker">
+							<option value="">Min. Prijs</option>
+							<option value="any" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == 'any') echo 'selected'; ?>>Alles</option>
+							<option value="50000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '50000') echo 'selected'; ?>>ANG. 50.000</option>
+							<option value="100000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '100000') echo 'selected'; ?>>ANG. 100.000</option>
+							<option value="200000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '200000') echo 'selected'; ?>>ANG. 200.000</option>
+							<option value="250000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '250000') echo 'selected'; ?>>ANG. 250.000</option>
+							<option value="300000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '300000') echo 'selected'; ?>>ANG. 300.000</option>
+							<option value="350000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '350000') echo 'selected'; ?>>ANG. 350.000</option>
+							<option value="400000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '400000') echo 'selected'; ?>>ANG. 400.000</option>
+							<option value="450000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '450000') echo 'selected'; ?>>ANG. 450.000</option>
+							<option value="500000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '500000') echo 'selected'; ?>>ANG. 500.000</option>
+							<option value="600000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '600000') echo 'selected'; ?>>ANG. 600.000</option>
+							<option value="700000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '700000') echo 'selected'; ?>>ANG. 700.000</option>
+							<option value="800000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '800000') echo 'selected'; ?>>ANG. 800.000</option>
+							<option value="900000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '900000') echo 'selected'; ?>>ANG. 900.000</option>
+							<option value="1000000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '1000000') echo 'selected'; ?>>ANG. 1.000.000</option>
+							<option value="1500000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '1500000') echo 'selected'; ?>>ANG. 1.500.000</option>
+							<option value="2000000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '2000000') echo 'selected'; ?>>ANG. 2.000.000</option>
+							<option value="2500000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '2500000') echo 'selected'; ?>>ANG. 2.500.000</option>
+							<option value="5000000" <?php if (isset($_GET['min-price']) && $_GET['min-price'] == '5000000') echo 'selected'; ?>>ANG. 5.000.000</option>
+						</select>
+
+						</div>
+						<div class="form-group hide prices-only-for-rent">
+						<select
+							name="min-price"
+							disabled="disabled"
+							class="sel_picker"
+						>
+							<option value="">Min. Prijs</option>
+							<option value="any">Alles</option>
+							<option value="100">ANG. 100</option>
+							<option value="600">ANG. 600</option>
+							<option value="700">ANG. 700</option>
+							<option value="800">ANG. 800</option>
+							<option value="900">ANG. 900</option>
+							<option value="1000">ANG. 1.000</option>
+							<option value="1250">ANG. 1.250</option>
+							<option value="1500">ANG. 1.500</option>
+							<option value="1750">ANG. 1.750</option>
+							<option value="2000">ANG. 2.000</option>
+							<option value="2500">ANG. 2.500</option>
+							<option value="3000">ANG. 3.000</option>
+							<option value="3500">ANG. 3.500</option>
+							<option value="4000">ANG. 4.000</option>
+							<option value="4500">ANG. 4.500</option>
+							<option value="5000">ANG. 5.000</option>
+							<option value="10000">ANG. 10.000</option>
+						</select>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div class="form-group prices-for-all">
+						<select name="max-price" class="sel_picker">
+							<option value="">Max. Prijs</option>
+							<option value="any" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == 'any') echo 'selected'; ?>>Alles</option>
+							<option value="100000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '100000') echo 'selected'; ?>>ANG. 100.000</option>
+							<option value="200000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '200000') echo 'selected'; ?>>ANG. 200.000</option>
+							<option value="250000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '250000') echo 'selected'; ?>>ANG. 250.000</option>
+							<option value="300000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '300000') echo 'selected'; ?>>ANG. 300.000</option>
+							<option value="350000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '350000') echo 'selected'; ?>>ANG. 350.000</option>
+							<option value="400000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '400000') echo 'selected'; ?>>ANG. 400.000</option>
+							<option value="450000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '450000') echo 'selected'; ?>>ANG. 450.000</option>
+							<option value="500000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '500000') echo 'selected'; ?>>ANG. 500.000</option>
+							<option value="600000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '600000') echo 'selected'; ?>>ANG. 600.000</option>
+							<option value="700000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '700000') echo 'selected'; ?>>ANG. 700.000</option>
+							<option value="800000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '800000') echo 'selected'; ?>>ANG. 800.000</option>
+							<option value="900000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '900000') echo 'selected'; ?>>ANG. 900.000</option>
+							<option value="1000000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '1000000') echo 'selected'; ?>>ANG. 1.000.000</option>
+							<option value="1500000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '1500000') echo 'selected'; ?>>ANG. 1.500.000</option>
+							<option value="2000000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '2000000') echo 'selected'; ?>>ANG. 2.000.000</option>
+							<option value="2500000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '2500000') echo 'selected'; ?>>ANG. 2.500.000</option>
+							<option value="5000000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '5000000') echo 'selected'; ?>>ANG. 5.000.000</option>
+							<option value="10000000" <?php if (isset($_GET['max-price']) && $_GET['max-price'] == '10000000') echo 'selected'; ?>>ANG. 10.000.000</option>
+						</select>
+
+						</div>
+						<div class="form-group hide prices-only-for-rent">
+						<select
+							name="max-price"
+							disabled="disabled"
+							class="sel_picker"
+						>
+							<option value="">Max. Prijs</option>
+							<option value="any">Alles</option>
+							<option value="600">ANG. 600</option>
+							<option value="700">ANG. 700</option>
+							<option value="800">ANG. 800</option>
+							<option value="900">ANG. 900</option>
+							<option value="1000">ANG. 1.000</option>
+							<option value="1250">ANG. 1.250</option>
+							<option value="1500">ANG. 1.500</option>
+							<option value="1750">ANG. 1.750</option>
+							<option value="2000">ANG. 2.000</option>
+							<option value="2500">ANG. 2.500</option>
+							<option value="3000">ANG. 3.000</option>
+							<option value="3500">ANG. 3.500</option>
+							<option value="4000">ANG. 4.000</option>
+							<option value="4500">ANG. 4.500</option>
+							<option value="5000">ANG. 5.000</option>
+							<option value="10000">ANG. 10.000</option>
+							<option value="25000">ANG. 25.000</option>
+						</select>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="type[]"
+								value="apartment"
+								id="sel__radio-appartement"
+								<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('apartment', $_GET['type'])) echo 'checked'; ?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-appartement">Apartment</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="type[]"
+								value="bouwgrond"
+								id="sel__radio-bouwgrond"
+								<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('bouwgrond', $_GET['type'])) echo 'checked'; ?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-bouwgrond">Bouwgrond</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="type[]"
+								value="overig-og"
+								id="sel__radio-overig-og"
+								<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('overig-og', $_GET['type'])) echo 'checked'; ?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-overig-og">Overig OG</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<input
+								type="checkbox"
+								class="radio-style"
+								name="type[]"
+								value="woonhuis"
+								id="sel__radio-woonhuis"
+								<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('woonhuis', $_GET['type'])) echo 'checked'; ?>
+								onclick="sel__select_check(this);"
+							/>
+							<label for="sel__radio-woonhuis">Woonhuis</label>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<div class="sel__label_panel">
+								<input
+								type="checkbox"
+								class="radio-style"
+								name="type[]"
+								value="bedrijfsobjecten"
+								id="sel__radio-bedrijfsobjecten"
+								<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('bedrijfsobjecten', $_GET['type'])) echo 'checked'; ?>
+								onclick="sel__select_check(this);"
+								/>
+								<label for="sel__radio-bedrijfsobjecten"
+								>Bedrijfsobjecten</label
+								>
+								<span class="icon-arrow-right-blue"></span>
+							</div>
+							</div>
+							<div class="sel__panel_list" style="display: none">
+							<div class="backdrop"></div>
+							<span class="icon-close-blue"></span>
+							<div class="sel__group_list sel__box_list">
+								<!--div class="sel__group_head">'. $term->name .'</div-->
+								<ul>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="type[]"
+									value="horeca"
+									id="sel__radio-horeca"
+									<?php if (isset($_GET['type']) && is_array($_GET['type']) && in_array('horeca', $_GET['type'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-horeca">Horeca</label>
+								</li>
+								</ul>
+							</div>
+							</div>
+							<div class="sel__selected_options"></div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<select
+							name="location"
+							class="sel_picker"
+							data-live-search="true"
+						>
+							<option value="">Alle plaatsnamen</option>
+							<option data-parentstate="" value="grote-berg" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'grote-berg') echo 'selected'; ?>>
+								Grote Berg
+							</option>
+							<option data-parentstate="" value="jan-thiel" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'jan-thiel') echo 'selected'; ?>>
+								Jan Thiel
+							</option>
+							<option data-parentstate="" value="oranjestad" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'oranjestad') echo 'selected'; ?>>
+								Oranjestad
+							</option>
+							<option data-parentstate="" value="sabakoe" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'sabakoe') echo 'selected'; ?>>
+								Sabakoe
+							</option>
+							<option data-parentstate="" value="sint-michiel" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'sint-michiel') echo 'selected'; ?>>
+								Sint Michiel
+							</option>
+							<option data-parentstate="" value="willemstad" 
+								<?php if (isset($_GET['location']) && $_GET['location'] === 'willemstad') echo 'selected'; ?>>
+								Willemstad
+							</option>
+						</select>
+
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<select name="area" class="sel_picker" data-live-search="true">
+							<option value="" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == '' ? 'selected' : ''; ?>>Alle wijken</option>
+							<option data-parentcity="" value="abrahamsz" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'abrahamsz' ? 'selected' : ''; ?>>Abrahamsz</option>
+							<option data-parentcity="" value="atlanta-resort" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'atlanta-resort' ? 'selected' : ''; ?>>Atlanta Resort</option>
+							<option data-parentcity="" value="barber" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'barber' ? 'selected' : ''; ?>>Barber</option>
+							<option data-parentcity="" value="bottelier" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'bottelier' ? 'selected' : ''; ?>>Bottelier</option>
+							<option data-parentcity="" value="cas-cora" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'cas-cora' ? 'selected' : ''; ?>>Cas Cora</option>
+							<option data-parentcity="" value="cas-coraweg" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'cas-coraweg' ? 'selected' : ''; ?>>cas coraweg</option>
+							<option data-parentcity="" value="cas-grandi" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'cas-grandi' ? 'selected' : ''; ?>>Cas Grandi</option>
+							<option data-parentcity="" value="curasol" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'curasol' ? 'selected' : ''; ?>>Curasol</option>
+							<option data-parentcity="" value="damasco-resort-jan-thiel" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'damasco-resort-jan-thiel' ? 'selected' : ''; ?>>Damasco Resort Jan Thiel</option>
+							<option data-parentcity="" value="emmastad" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'emmastad' ? 'selected' : ''; ?>>Emmastad</option>
+							<option data-parentcity="" value="esperanza" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'esperanza' ? 'selected' : ''; ?>>Esperanza</option>
+							<option data-parentcity="" value="groot-davelaar" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'groot-davelaar' ? 'selected' : ''; ?>>Groot Davelaar</option>
+							<option data-parentcity="" value="grote-berg" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'grote-berg' ? 'selected' : ''; ?>>Grote Berg</option>
+							<option data-parentcity="" value="hoenderberg" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'hoenderberg' ? 'selected' : ''; ?>>Hoenderberg</option>
+							<option data-parentcity="" value="jan-sofat" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'jan-sofat' ? 'selected' : ''; ?>>Jan Sofat</option>
+							<option data-parentcity="" value="jan-thiel" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'jan-thiel' ? 'selected' : ''; ?>>Jan Thiel</option>
+							<option data-parentcity="" value="julianadorp" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'julianadorp' ? 'selected' : ''; ?>>Julianadorp</option>
+							<option data-parentcity="" value="klein-sint-michiel" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'klein-sint-michiel' ? 'selected' : ''; ?>>Klein Sint Michiel</option>
+							<option data-parentcity="" value="koraal-partier" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'koraal-partier' ? 'selected' : ''; ?>>Koraal Partier</option>
+							<option data-parentcity="" value="mahaai" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'mahaai' ? 'selected' : ''; ?>>Mahaai</option>
+							<option data-parentcity="" value="mahuma" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'mahuma' ? 'selected' : ''; ?>>Mahuma</option>
+							<option data-parentcity="" value="matancia" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'matancia' ? 'selected' : ''; ?>>Matancia</option>
+							<option data-parentcity="" value="montana-rey" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'montana-rey' ? 'selected' : ''; ?>>Montana Rey</option>
+							<option data-parentcity="" value="noord-aruba" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'noord-aruba' ? 'selected' : ''; ?>>Noord Aruba</option>
+							<option data-parentcity="" value="papaya-resort" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'papaya-resort' ? 'selected' : ''; ?>>Papaya Resort</option>
+							<option data-parentcity="" value="parasasa" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'parasasa' ? 'selected' : ''; ?>>Parasasa</option>
+							<option data-parentcity="" value="pietermaai" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'pietermaai' ? 'selected' : ''; ?>>Pietermaai</option>
+							<option data-parentcity="" value="piscadera" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'piscadera' ? 'selected' : ''; ?>>Piscadera</option>
+							<option data-parentcity="" value="resort" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'resort' ? 'selected' : ''; ?>>Resort</option>
+							<option data-parentcity="" value="salina" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'salina' ? 'selected' : ''; ?>>Salina</option>
+							<option data-parentcity="" value="santa-catharina" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'santa-catharina' ? 'selected' : ''; ?>>Santa Catharina</option>
+							<option data-parentcity="" value="santa-maria" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'santa-maria' ? 'selected' : ''; ?>>Santa Maria</option>
+							<option data-parentcity="" value="santa-rosa" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'santa-rosa' ? 'selected' : ''; ?>>Santa Rosa</option>
+							<option data-parentcity="" value="schelpwijk" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'schelpwijk' ? 'selected' : ''; ?>>Schelpwijk</option>
+							<option data-parentcity="" value="scherpenheuvel" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'scherpenheuvel' ? 'selected' : ''; ?>>Scherpenheuvel</option>
+							<option data-parentcity="" value="semikok" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'semikok' ? 'selected' : ''; ?>>Semikok</option>
+							<option data-parentcity="" value="suffisant" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'suffisant' ? 'selected' : ''; ?>>Suffisant</option>
+							<option data-parentcity="" value="tera-kora" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'tera-kora' ? 'selected' : ''; ?>>Tera Kora</option>
+							<option data-parentcity="" value="toni-kunchi" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'toni-kunchi' ? 'selected' : ''; ?>>Toni Kunchi</option>
+							<option data-parentcity="" value="vredenberg" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'vredenberg' ? 'selected' : ''; ?>>Vredenberg</option>
+							<option data-parentcity="" value="wacawa" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'wacawa' ? 'selected' : ''; ?>>Wacawa</option>
+							<option data-parentcity="" value="west-ronde-klip" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'west-ronde-klip' ? 'selected' : ''; ?>>West Ronde Klip</option>
+							<option data-parentcity="" value="white-wall" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'white-wall' ? 'selected' : ''; ?>>White Wall</option>
+							<option data-parentcity="" value="zuurzak" style="display: block" <?php echo isset($_GET['area']) && $_GET['area'] == 'zuurzak' ? 'selected' : ''; ?>>Zuurzak</option>
+						</select>
+
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<!--select class="sel_picker" name="label" data-live-search="false">
+						<option value="">Alle labels</option>                                        </select-->
+						<!-- <div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="aangekocht"
+							<?php //echo isset($_GET['label']) && in_array('aangekocht', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-aangekocht"
+							class="radio-style"
+							/>
+							<label for="sel__radio-aangekocht">Aangekocht</label>
+						</div> -->
+						<div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="beleggingspand"
+							<?php echo isset($_GET['label']) && in_array('beleggingspand', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-beleggingspand"
+							class="radio-style"
+							/>
+							<label for="sel__radio-beleggingspand"
+							>Beleggingspand</label
+							>
+						</div>
+						<!-- <div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="in-prijs-verlaagd"
+							<?php //echo isset($_GET['label']) && in_array('in-prijs-verlaagd', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-in-prijs-verlaagd"
+							class="radio-style"
+							/>
+							<label for="sel__radio-in-prijs-verlaagd"
+							>In prijs verlaagd</label
+							>
+						</div> -->
+						<div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="nieuwbouw"
+							<?php echo isset($_GET['label']) && in_array('nieuwbouw', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-nieuwbouw"
+							class="radio-style"
+							/>
+							<label for="sel__radio-nieuwbouw">Nieuwbouw</label>
+						</div>
+						<!-- <div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="open-huis"
+							<?php //echo isset($_GET['label']) && in_array('open-huis', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-open-huis"
+							class="radio-style"
+							/>
+							<label for="sel__radio-open-huis">Open huis</label>
+						</div> -->
+						<div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="recreatie"
+							<?php echo isset($_GET['label']) && in_array('recreatie', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-recreatie"
+							class="radio-style"
+							/>
+							<label for="sel__radio-recreatie">Recreatie</label>
+						</div>
+						<!-- <div>
+							<input
+							type="checkbox"
+							name="label[]"
+							value="vakantieverhuur"
+							<?php //echo isset($_GET['label']) && in_array('vakantieverhuur', $_GET['label']) ? 'checked' : ''; ?>
+							id="sel__radio-vakantieverhuur"
+							class="radio-style"
+							/>
+							<label for="sel__radio-vakantieverhuur"
+							>Vakantieverhuur</label
+							>
+						</div> -->
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<div class="sel__label_panel">
+								Slaapkamers <span class="icon-arrow-right-blue"></span>
+							</div>
+							</div>
+							<div class="sel__panel_list" style="display: none">
+							<div class="backdrop"></div>
+							<span class="icon-close-blue"></span>
+							<div class="sel__group_list">
+								<input
+								name="bedrooms"
+								type="radio"
+								value=""
+								style="display: none"
+								/>
+								<ul>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="1"
+											id="bedrooms-1-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '1' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-1-radiobox">1 Slaapkamer</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="2"
+											id="bedrooms-2-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '2' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-2-radiobox">2+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="3"
+											id="bedrooms-3-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '3' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-3-radiobox">3+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="4"
+											id="bedrooms-4-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '4' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-4-radiobox">4+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="5"
+											id="bedrooms-5-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '5' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-5-radiobox">5+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="6"
+											id="bedrooms-6-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '6' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-6-radiobox">6+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="7"
+											id="bedrooms-7-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '7' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-7-radiobox">7+ Slaapkamers</label>
+									</li>
+									<li>
+										<input
+											name="bedrooms"
+											type="radio"
+											value="8"
+											id="bedrooms-8-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bedrooms']) && $_GET['bedrooms'] == '8' ? 'checked' : ''; ?>
+										/>
+										<label for="bedrooms-8-radiobox">8+ Slaapkamers</label>
+									</li>
+								</ul>
+
+							</div>
+							</div>
+							<div class="sel__selected_options"></div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<div class="sel__label_panel">
+								Badkamers <span class="icon-arrow-right-blue"></span>
+							</div>
+							</div>
+							<div class="sel__panel_list" style="display: none">
+							<div class="backdrop"></div>
+							<span class="icon-close-blue"></span>
+							<div class="sel__group_list">
+								<input
+								name="bathrooms"
+								type="radio"
+								value=""
+								style="display: none"
+								/>
+								<ul>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="1"
+											id="bathrooms-1-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '1' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-1-radiobox">1 Badkamer</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="2"
+											id="bathrooms-2-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '2' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-2-radiobox">2+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="3"
+											id="bathrooms-3-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '3' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-3-radiobox">3+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="4"
+											id="bathrooms-4-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '4' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-4-radiobox">4+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="5"
+											id="bathrooms-5-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '5' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-5-radiobox">5+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="6"
+											id="bathrooms-6-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '6' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-6-radiobox">6+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="7"
+											id="bathrooms-7-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '7' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-7-radiobox">7+ Badkamers</label>
+									</li>
+									<li>
+										<input
+											name="bathrooms"
+											type="radio"
+											value="8"
+											id="bathrooms-8-radiobox"
+											class="radio-style"
+											onclick="sel__select_radio(this);"
+											<?php echo isset($_GET['bathrooms']) && $_GET['bathrooms'] == '8' ? 'checked' : ''; ?>
+										/>
+										<label for="bathrooms-8-radiobox">8+ Badkamers</label>
+									</li>
+								</ul>
+
+							</div>
+							</div>
+							<div class="sel__selected_options"></div>
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div class="range-block">
+					<label>Woonoppervlakte</label>
+					<?php 
+						// Fetch minimum and maximum area values from GET parameters or set defaults
+							$min_area = isset($_GET['min-area']) && !empty($_GET['min-area']) ? $_GET['min-area'] : 25; // Default minimum area
+							$max_area = isset($_GET['max-area']) && !empty($_GET['max-area']) ? $_GET['max-area'] : 1000; // Default maximum area
+							?>
+					<div class="clearfix range-text">
+					<div class="range-text">
+						<input
+						type="hidden"
+						name="min-area"
+						id="min-area"
+						class="min-area-range-hidden range-input"
+						value=""
+						/>
+						<input
+						type="hidden"
+						name="max-area"
+						id="max-area"
+						class="max-area-range-hidden range-input"
+						value=""
+						/>
+						<span class="range-title"
+						><?php echo houzez_option('srh_area_range', 'Area Range:'); ?></span
+						>
+						<?php echo houzez_option('srh_from', 'from'); ?>
+						<span class="min-area-range"
+						><?php echo esc_html($min_area); ?></span
+						>
+						<?php echo houzez_option('srh_to', 'to'); ?>
+						<span class="max-area-range"
+						><?php echo esc_html($max_area); ?></span
+						>
+					</div>
+					<!-- range-text -->
+					<div class="area-range-wrap">
+						<div id="area-range" class="area-range"></div>
+						<!-- area-range -->
+					</div>
+					<!-- area-range-wrap -->
+					</div>
+				</div>
+				<div class="range-block rang-form-block">
+					<div class="row">
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+							<div>
+								<input
+									type="checkbox"
+									name="gated_community"
+									value="1"
+									id="sel__radio-gated_community"
+									class="radio-style"
+									<?php echo isset($_GET['gated_community']) && $_GET['gated_community'] == '1' ? 'checked' : ''; ?>
+								/>
+								<label for="sel__radio-gated_community">Resort</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+							<div>
+								<input
+									type="checkbox"
+									name="pets_allowed"
+									value="1"
+									id="sel__radio-pets_allowed"
+									class="radio-style"
+									<?php echo isset($_GET['pets_allowed']) && $_GET['pets_allowed'] == '1' ? 'checked' : ''; ?>
+								/>
+								<label for="sel__radio-pets_allowed">Huisdieren toegestaan</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<div class="sel__label_panel">
+								Bijzonderheden
+								<span class="icon-arrow-right-blue"></span>
+							</div>
+							</div>
+							<div class="sel__panel_list" style="display: none">
+							<div class="backdrop"></div>
+							<span class="icon-close-blue"></span>
+							<div class="sel__group_list sel__box_list">
+							<ul>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Furnished"
+										id="sel__radio-Furnished"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Furnished', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Furnished">Gemeubileerd</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Partly upholstered"
+										id="sel__radio-Partly upholstered"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Partly upholstered', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Partly upholstered">Gedeeltelijk gestoffeerd</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Monumental building"
+										id="sel__radio-Monumental building"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Monumental building', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Monumental building">Monumentaal pand</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Monument"
+										id="sel__radio-Monument"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Monument', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Monument">Monument</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Upholstered"
+										id="sel__radio-Upholstered"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Upholstered', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Upholstered">Gestoffeerd</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Partly rented"
+										id="sel__radio-Partly rented"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Partly rented', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Partly rented">Gedeeltelijk verhuurd</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Double occupancy possible"
+										id="sel__radio-Double occupancy possible"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Double occupancy possible', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Double occupancy possible">Dubbele bewoning mogelijk</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Double occupancy present"
+										id="sel__radio-Double occupancy present"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Double occupancy present', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Double occupancy present">Dubbele bewoning aanwezig</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Accessible to the elderly"
+										id="sel__radio-Accessible to the elderly"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Accessible to the elderly', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Accessible to the elderly">Toegankelijk voor ouderen</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Accessible for the disabled"
+										id="sel__radio-Accessible for the disabled"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Accessible for the disabled', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Accessible for the disabled">Toegankelijk voor gehandicapten</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Fixer-upper"
+										id="sel__radio-Fixer-upper"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Fixer-upper', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Fixer-upper">Kluswoning</label>
+								</li>
+								<li>
+									<input
+										type="checkbox"
+										class="radio-style"
+										name="specialities[]"
+										value="Protected city or village view"
+										id="sel__radio-Protected city or village view"
+										onclick="sel__select_check(this);"
+										<?php echo isset($_GET['specialities']) && in_array('Protected city or village view', $_GET['specialities']) ? 'checked' : ''; ?>
+									/>
+									<label for="sel__radio-Protected city or village view">Beschermd stads- of dorpsgezicht</label>
+								</li>
+							</ul>
+
+							</div>
+							</div>
+							<div class="sel__selected_options"></div>
+						</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12">
+						<div class="form-group">
+						<div class="sel__group_select">
+							<div class="sel__label">
+							<div class="sel__label_panel">
+								Voorzieningen
+								<span class="icon-arrow-right-blue"></span>
+							</div>
+							</div>
+							<div class="sel__panel_list" style="display: none">
+							<div class="backdrop"></div>
+							<span class="icon-close-blue"></span>
+							<div class="sel__group_list sel__box_list">
+							<ul>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Shutters"
+									id="sel__radio-Shutters"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Shutters', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Shutters">Rolluiken</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="TV cable"
+									id="sel__radio-TV cable"
+									<?php if (isset($_GET['feature_facilities']) && in_array('TV cable', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-TV cable">TV kabel</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Elevator"
+									id="sel__radio-Elevator"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Elevator', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Elevator">Lift</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Swimming pool"
+									id="sel__radio-Swimming pool"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Swimming pool', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Swimming pool">Zwembad</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Mechanical ventilation"
+									id="sel__radio-Mechanical ventilation"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Mechanical ventilation', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Mechanical ventilation">Mechanische ventilatie</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Alarm installation"
+									id="sel__radio-Alarm installation"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Alarm installation', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Alarm installation">Alarminstallatie</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Outdoor awnings"
+									id="sel__radio-Outdoor awnings"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Outdoor awnings', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Outdoor awnings">Buitenzonwering</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Air conditioning"
+									id="sel__radio-Air conditioning"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Air conditioning', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Air conditioning">Airconditioning</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Solar collectors"
+									id="sel__radio-Solar collectors"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Solar collectors', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Solar collectors">Zonnecollectoren</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Satellite dish"
+									id="sel__radio-Satellite dish"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Satellite dish', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Satellite dish">Satellietschotel</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Jacuzzi"
+									id="sel__radio-Jacuzzi"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Jacuzzi', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Jacuzzi">Jacuzzi</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Steam room"
+									id="sel__radio-Steam room"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Steam room', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Steam room">Stoomcabine</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Chimney"
+									id="sel__radio-Chimney"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Chimney', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Chimney">Rookkanaal</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Sliding door"
+									id="sel__radio-Sliding door"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Sliding door', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Sliding door">Schuifpui</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="French balcony"
+									id="sel__radio-French balcony"
+									<?php if (isset($_GET['feature_facilities']) && in_array('French balcony', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-French balcony">Frans balkon</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Windmill"
+									id="sel__radio-Windmill"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Windmill', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Windmill">Windmolen</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Porthole"
+									id="sel__radio-Porthole"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Porthole', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Porthole">Dakraam</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Sauna"
+									id="sel__radio-Sauna"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Sauna', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Sauna">Sauna</label>
+								</li>
+								<li>
+									<input
+									type="checkbox"
+									class="radio-style"
+									name="feature_facilities[]"
+									value="Fiber optic cable"
+									id="sel__radio-Fiber optic cable"
+									<?php if (isset($_GET['feature_facilities']) && in_array('Fiber optic cable', $_GET['feature_facilities'])) echo 'checked'; ?>
+									onclick="sel__select_check(this);"
+									/>
+									<label for="sel__radio-Fiber optic cable">Glasvezel kabel</label>
+								</li>
+							</ul>
+
+							</div>
+							</div>
+							<div class="sel__selected_options"></div>
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div class="range-block rang-form-block">
+					<div class="row">
+					<div class="col-sm-12 col-xs-12">
+						<button type="submit" class="btn btn-secondary btn-block">
+						<i class="fa fa-search fa-left"></i>Zoeken
+						</button>
+					</div>
+					</div>
+				</div>
+				</form>
+			</div>
+			</div>
+		</div>
+		</aside>
+
+  
+	  <?php
+	  return ob_get_clean();
+	}
 ?>
+
+
+
 
 

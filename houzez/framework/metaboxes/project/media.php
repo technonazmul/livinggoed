@@ -34,7 +34,7 @@ function houzez_project_media_metabox_fields( $metabox_fields ) {
 		array(
             'name' => esc_html__('Select and Upload', 'houzez'),
             'id' => "{$houzez_prefix}project_images",
-            'desc' => esc_html__('(Minimum size 1440x900)', 'houzez'),
+            'desc' => esc_html__('("")', 'houzez'),
             'type' => 'image_advanced',
             'max_file_uploads' => houzez_option('max_project_images', 50),
             'columns' => 12,
