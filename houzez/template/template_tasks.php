@@ -102,6 +102,9 @@ get_header();
     </div><!-- dashboard-content-inner-wrap -->
 </section><!-- dashboard-content-wrap -->
 
+<section class="dashboard-side-wrap">
+    <?php get_template_part('template-parts/dashboard/side-wrap'); ?>
+</section>
 
 
 <!-- Task Form Modal -->
@@ -577,10 +580,7 @@ get_header();
 
 
 <style>
-    .dashboard-header-main-wrap, .dashboard-content-wrap {
-    padding-left: 0;
-    margin: 0;
-}
+    
 .fc-scrollgrid-sync-table {
     cursor: pointer;
 }

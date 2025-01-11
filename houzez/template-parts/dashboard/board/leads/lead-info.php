@@ -35,9 +35,36 @@ if(isset($_GET['lead-id'])) {
 } 
 
 if( !empty($lead) ) :
+	global $wpdb;
+
+    // Table name
+    $table_name = $wpdb->prefix . 'houzez_crm_activities';
+
+    // Query to find the row with the specific email in metadata
+    $activity = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT meta FROM $table_name WHERE meta LIKE %s ORDER BY activity_id  DESC LIMIT 1",
+            '%' . $wpdb->esc_like($lead->email) . '%'
+        )
+    );
+
+    if ($activity) {
+        // Unserialize the metadata
+        $meta_data = maybe_unserialize($activity->meta);
+
+        if (isset($meta_data['listing_id'])) {
+            $listing_id = $meta_data['listing_id'];
+
+            // Get permalink for the listing_id
+            $permalink = get_permalink($listing_id);
+
+           
+        } 
+    } 
 ?>
 <div class="lead-detail-wrap">
 	<h2><?php if($prefix) { echo $prefix.'. '; } echo esc_attr($display_name); ?></h2>
+
 
 	<ul class="list-unstyled mb-5">
 		<?php if(!empty($first_name)) { ?>
@@ -126,7 +153,7 @@ if( !empty($lead) ) :
 		</li>
 		<?php } ?>
 
-		<li>
+		<li style="overflow: hidden;">
 			<strong><?php esc_html_e('Source', 'houzez'); ?></strong><br>
 			<?php 
 			if( !empty($source) || !empty($source_link)) {
@@ -139,7 +166,12 @@ if( !empty($lead) ) :
 					echo '<a href="'.esc_url($source_link).'">'.esc_url($source_link).'</a>';
 				}
 			} 
+
+			if(isset($permalink)) {
+				echo '<a href="'.esc_url($permalink).'">'.esc_url($permalink).'</a>';
+			}
 			?>
+			
 			
 		</li>
 		<li>

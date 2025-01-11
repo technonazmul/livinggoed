@@ -561,21 +561,19 @@ if( !function_exists('houzez_instantpage_script_loader_tag')) {
 	add_filter( 'script_loader_tag', 'houzez_instantpage_script_loader_tag', 10, 2 );
 }
 
-if(!function_exists('houzez_hide_admin_bar')) {
-	function houzez_hide_admin_bar($bool) {
-	  
-	  if ( !current_user_can('administrator') && !is_admin() ) {
-	  		return false;
-
-	  } else if ( houzez_is_dashboard() ) :
-	    return false;
-
-	  else :
-	    return $bool;
-	  endif;
-	}
-	add_filter('show_admin_bar', 'houzez_hide_admin_bar');
+if (!function_exists('houzez_hide_admin_bar')) {
+    function houzez_hide_admin_bar($bool) {
+        if (!current_user_can('administrator') && !is_admin()) {
+            return false;
+        } elseif (houzez_is_dashboard()) {
+            return false;
+        } else {
+            return $bool;
+        }
+    }
+    add_filter('show_admin_bar', 'houzez_hide_admin_bar');
 }
+
 
 if ( !function_exists( 'houzez_block_users' ) ) {
 
@@ -2309,9 +2307,3 @@ function render_custom_search_form() {
 	  <?php
 	  return ob_get_clean();
 	}
-?>
-
-
-
-
-
