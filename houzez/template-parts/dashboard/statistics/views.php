@@ -71,7 +71,7 @@ $last2month = $last2month - $lastweek;
 				$table_name = $wpdb->prefix . 'houzez_crm_activities';
 
 				// Desired listing_id to search
-				$listing_id = 998253; // Replace with the listing_id you're searching for
+				$listing_id = $_GET['listing_id']; // Replace with the listing_id you're searching for
 
 				// Prepare the serialized pattern for listing_id
 				$search_pattern = '%"listing_id";i:' . $listing_id . ';%';
