@@ -108,13 +108,13 @@ if( !function_exists('matched_listings')) {
 
 if(!function_exists('houzez_matched_prop_type')) {
     function houzez_matched_prop_type($tax_query, $meta) {
-        // if ( isset( $meta['property_type']['slug'] ) && !empty($meta['property_type']['slug']) ) {
-        //     $tax_query[] = array(
-        //         'taxonomy' => 'property_type',
-        //         'field' => 'slug',
-        //         'terms' => $meta['property_type']['slug']
-        //     );
-        // }
+        if ( isset( $meta['property_type']['slug'] ) && !empty($meta['property_type']['slug']) ) {
+            $tax_query[] = array(
+                'taxonomy' => 'property_type',
+                'field' => 'slug',
+                'terms' => $meta['property_type']['slug']
+            );
+        }
         return $tax_query;
     }
 
