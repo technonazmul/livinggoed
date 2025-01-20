@@ -44,15 +44,7 @@ if( !empty($enquiry) ) :
 			<strong><?php esc_html_e('Contact', 'houzez'); ?></strong><br>
 			<a href="<?php echo esc_url($lead_link); ?>"><strong><?php echo esc_attr($display_name); ?></strong></a>
 		</li>
-		<li>
-			<strong><?php esc_html_e('Inquiry Type', 'houzez'); ?></strong><br>
-			<?php 
-			if( !empty($enquiry->enquiry_type) ) {
-				echo esc_attr($enquiry->enquiry_type);
-			} else {
-				echo '-'; 
-			} ?>
-		</li>
+		
 		<li>
 			<strong><?php esc_html_e('Property Type', 'houzez'); ?></strong><br>
 			<?php 
