@@ -1068,7 +1068,7 @@ function render_custom_search_form() {
 				<form
 				autocomplete="off"
 				method="get"
-				action="https://curacao3d.getexperthere.online/search-results/"
+				action="https://curacao3d.com/search-results/"
 				class="houzez-search-form-js houzez-search-builder-form-js"
 				>
 				<div class="range-block rang-form-block">
@@ -2307,3 +2307,19 @@ function render_custom_search_form() {
 	  <?php
 	  return ob_get_clean();
 	}
+
+function restrict_page_to_admins() {
+    // Replace with the ID or slug of the page you want to restrict
+    $restricted_page_slug = 'tasks';
+    
+    // Check if the current page is the restricted page
+    if (is_page($restricted_page_slug)) {
+        // Check if the current user is an administrator
+        if (!current_user_can('administrator')) {
+            // Redirect non-admin users to the homepage or show a 403 error
+            wp_redirect(home_url());
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'restrict_page_to_admins');

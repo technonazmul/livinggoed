@@ -2260,12 +2260,22 @@ if (!function_exists('houzez_user_role_by_user_id')) {
      * @return string The user role.
      */
     function houzez_user_role_by_user_id($user_id) {
+        // Validate the user ID
         if (!is_int($user_id) || $user_id <= 0) {
             return 'houzez_guest';
         }
-
+    
+        // Load the user object
         $user = new WP_User($user_id);
-        return $user->roles ? $user->roles[0] : 'houzez_guest';
+    
+        // Check if roles are defined and get the first role, regardless of the index
+        if (!empty($user->roles) && is_array($user->roles)) {
+            // Use array_values to get the first role in a zero-indexed array
+            $roles = array_values($user->roles);
+            return $roles[0];
+        }
+    
+        return 'houzez_guest';
     }
 }
 
