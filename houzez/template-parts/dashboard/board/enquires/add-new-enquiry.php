@@ -28,24 +28,7 @@
 	<div class="lined-block">
 		<h3><?php esc_html_e('Information', 'houzez'); ?></h3>
 		<div class="row">
-			<div class="col-md-12 col-sm-12">
-				<div class="form-group">
-					<label><?php esc_html_e('Inquiry Type*', 'houzez'); ?></label>
-					<select id="enquiry_type" name="enquiry_type" class="selectpicker form-control bs-select-hidden" title="<?php esc_html_e('Select', 'houzez'); ?>" data-live-search="false">
-						<option value=""><?php esc_html_e('Select', 'houzez'); ?></option>
-						<?php
-						$enquiry_type = hcrm_get_option('enquiry_type', 'hcrm_enquiry_settings', esc_html__('Purchase, Rent, Sell, Miss, Evaluation, Mortgage', 'houzez'));
-						if(!empty($enquiry_type)) {
-
-							$enquiry_type = explode(',', $enquiry_type);
-							foreach( $enquiry_type as $en_type ) {
-								echo '<option value="'.trim($en_type).'">'.esc_attr($en_type).'</value>';
-							}
-						}
-						?>
-					</select><!-- selectpicker -->
-				</div><!-- form-group -->
-			</div><!-- col-md-6 col-sm-12 -->
+			
 			
 			<div class="col-md-12 col-sm-12">
 				<div class="form-group">
