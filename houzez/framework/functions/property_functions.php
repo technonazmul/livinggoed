@@ -264,8 +264,8 @@ if( !function_exists('houzez_submit_listing') ) {
             $prop_id = wp_insert_post( $new_property );
 
             // Send mail after create a property
-            if(function_exists('houzez_crm_get_matched_data')) {
-                do_action('houzez_crm_send_scheduled_emails');
+            if(function_exists('houzez_crm_send_daily_emails')) {
+                houzez_crm_send_daily_emails();
             } else {
                 error_log('Function houzez_crm_send_scheduled_emails not found.');
             }
