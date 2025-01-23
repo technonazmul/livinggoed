@@ -23,13 +23,13 @@ require_once plugin_dir_path(__FILE__) . 'includes/scheduler.php';
 // register_deactivation_hook(__FILE__, 'houzez_crm_deactivate');
 
 // Add a custom cron schedule for 1 minute
-add_filter('cron_schedules', function($schedules) {
-    $schedules['one_minute'] = [
-        'interval' => 60, // 60 seconds (1 minute)
-        'display' => __('Every Minute')
-    ];
-    return $schedules;
-});
+// add_filter('cron_schedules', function($schedules) {
+//     $schedules['one_minute'] = [
+//         'interval' => 60, // 60 seconds (1 minute)
+//         'display' => __('Every Minute')
+//     ];
+//     return $schedules;
+// });
 
 // Schedule the custom cron job
 // function houzez_crm_activate() {
@@ -43,28 +43,28 @@ add_filter('cron_schedules', function($schedules) {
 //     wp_clear_scheduled_hook('houzez_crm_send_scheduled_emails');
 // }
 
-function houzez_crm_admin_menu() {
-    add_menu_page(
-        'Houzez Advance CRM', 
-        'Houzez Advance CRM', 
-        'manage_options', 
-        'houzez-crm', 
-        'houzez_crm_render_table', 
-        'dashicons-businessman', 
-        6
-    );
+// function houzez_crm_admin_menu() {
+//     add_menu_page(
+//         'Houzez Advance CRM', 
+//         'Houzez Advance CRM', 
+//         'manage_options', 
+//         'houzez-crm', 
+//         'houzez_crm_render_table', 
+//         'dashicons-businessman', 
+//         6
+//     );
 
-    add_submenu_page(
-        null, // Hide from the main menu
-        'Lead Details', 
-        'Lead Details', 
-        'manage_options', 
-        'houzez-crm-lead-details', 
-        'houzez_crm_render_lead_details'
-    );
-}
+//     add_submenu_page(
+//         null, // Hide from the main menu
+//         'Lead Details', 
+//         'Lead Details', 
+//         'manage_options', 
+//         'houzez-crm-lead-details', 
+//         'houzez_crm_render_lead_details'
+//     );
+// }
 
-add_action('admin_menu', 'houzez_crm_admin_menu');
+// add_action('admin_menu', 'houzez_crm_admin_menu');
 
 
 

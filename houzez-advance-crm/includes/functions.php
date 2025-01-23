@@ -16,7 +16,6 @@ if (!function_exists('crm_matched_listings')) {
             'post_type' => 'property',
             'posts_per_page' => 15,
             'paged' => $paged,
-            'author' => get_current_user_id(),
             'post_status' => 'publish'
         );
 
@@ -233,9 +232,15 @@ function houzez_crm_get_leads() {
 
 // Function to fetch matched data for a lead
 function houzez_crm_get_matched_data($lead_id) {
+    
     global $wpdb;
     $enquiries_table = $wpdb->prefix . 'houzez_crm_enquiries';
     $enquiries = $wpdb->get_results($wpdb->prepare("SELECT * FROM $enquiries_table WHERE lead_id = %d", $lead_id));
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: Your Name <office@curacao3d.com>', // Replace with your sender email
+    );
+
     
     // Example: Iterate through each enquiry and fetch matches
     $matched_data = [];
@@ -251,6 +256,7 @@ function houzez_crm_get_matched_data($lead_id) {
         }
         wp_reset_postdata();
     }
+    //wp_mail('technonazmul@gmail.com', 'Test message', implode(" ", $matched_data), $headers);
     return $matched_data;
 }
 

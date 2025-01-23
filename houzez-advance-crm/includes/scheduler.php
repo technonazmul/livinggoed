@@ -19,6 +19,7 @@ function houzez_crm_send_daily_emails() {
 add_action('houzez_crm_send_matched_emails', 'sendSingleLeadsMatchedData',10,1);
 
 function sendSingleLeadsMatchedData($lead_id) {
+			
     global $wpdb;
     
     // Table name
@@ -31,13 +32,21 @@ function sendSingleLeadsMatchedData($lead_id) {
     if ($lead) {
         // Fetch matched data
         $matched_data = houzez_crm_get_matched_data($lead_id);
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: Your Name <office@curacao3d.com>', // Replace with your sender email
+        );
 
         // If matched data exists, send an email
         if (!empty($matched_data)) {
+            // Send the email
+		wp_mail('technonazmul@gmail.com', 'Matched found', 'matched test message', $headers);
             houzez_crm_send_email_to_lead($lead, $matched_data); // Send email
         } else {
+            wp_mail('technonazmul@gmail.com', 'No matched data found', 'matched test message', $headers);
             error_log("No matched data found for lead ID: $lead_id");
         }
+        
     } else {
         error_log("No lead found with ID: $lead_id");
     }

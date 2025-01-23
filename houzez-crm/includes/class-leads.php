@@ -457,6 +457,7 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 		            ));
 				}*/
 	        }
+			
             wp_die();
 		}
 
@@ -594,7 +595,11 @@ if ( ! class_exists( 'Houzez_Leads' ) ) {
 				'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
 				'%s', '%s', '%s', '%s'
 			));
-		
+
+			
+			
+			
+
 			return $wpdb->insert_id;
 		}
 		

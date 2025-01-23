@@ -64,8 +64,9 @@ $last2month = $last2month - $lastweek;
 </div><!-- dashboard-statistic-block -->
 
 <?php 
-			if($_GET['listing_id'] != '') {
-				global $wpdb;
+			if(isset($_GET['listing_id'])) {
+				if($_GET['listing_id'] != '') {
+					global $wpdb;
 
 				// Table name
 				$table_name = $wpdb->prefix . 'houzez_crm_activities';
@@ -107,5 +108,7 @@ $last2month = $last2month - $lastweek;
 				} else {
 					echo 'No rows found with the specified listing_id.';
 				}
+				}
+				
 			}
 		?>
